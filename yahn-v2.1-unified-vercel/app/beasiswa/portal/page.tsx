@@ -1,0 +1,4 @@
+import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
+import ScholarshipAccess from './ScholarshipAccess';
+export default function ScholarshipPortal(){return <><SiteHeader/><main className="auth-page scholarship-auth-page"><div className="auth-shell"><div className="auth-copy"><span className="pill pill-dark">Portal Peserta YAHN</span><h1>Satu akun untuk seluruh perjalanan beasiswa.</h1><p>Daftar, kirim berkas, pantau hasil seleksi, lihat jadwal wawancara, dan konfirmasi kehadiran dari portal YAHN yang sama.</p><div className="trust-list"><span>✓ Login melalui kode email</span><span>✓ Status seleksi tersinkron dengan database YAHN</span><span>✓ Dokumen tetap disimpan di Google Drive YAHN</span></div></div><ScholarshipAccess/></div></main><SiteFooter/></>}
