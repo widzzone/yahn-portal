@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useMemo, useState } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const presets = [50000, 100000, 250000, 500000, 1000000];
 const fmt = (v: number) =>
@@ -18,6 +18,7 @@ export default function DonationForm({
   initialAmount?: number;
   initialMethod?: 'QRIS' | 'Transfer Bank';
 }) {
+  const router = useRouter();
   const [amount, setAmount] = useState(initialAmount);
   const [custom, setCustom] = useState('');
   const [method, setMethod] = useState<'QRIS' | 'Transfer Bank'>(initialMethod);
@@ -64,9 +65,12 @@ export default function DonationForm({
       const d = await r.json();
       if (!r.ok) throw new Error(d.message || 'Gagal menyimpan.');
       setSuccess(true);
-      setStatus(
-        `Konfirmasi donasi ${d.donationId || ''} berhasil dicatat. Tim YAHN akan melakukan verifikasi transaksi.`
-      );
+      const qs = new URLSearchParams({
+        donationId: String(d.donationId || ''),
+        amount: String(finalAmount),
+        method,
+      });
+      router.push(`/donasi/terima-kasih?${qs.toString()}`);
     } catch (e) {
       setStatus(e instanceof Error ? e.message : 'Terjadi kesalahan.');
     } finally {
@@ -222,17 +226,8 @@ export default function DonationForm({
           <div className="form-security donation24-security">
             🔒 Konfirmasi Anda masuk ke database YAHN dan akan diverifikasi oleh admin.
           </div>
-          {status && (
-            <div className={`notice ${success ? 'notice-success' : 'notice-warn'}`}>
-              {status}
-              {success && (
-                <div style={{ marginTop: 10 }}>
-                  <Link href="/donatur/masuk" className="text-link">
-                    Masuk ke Portal Donatur →
-                  </Link>
-                </div>
-              )}
-            </div>
+          {status && !success && (
+            <div className="notice notice-warn">{status}</div>
           )}
         </div>
       </div>

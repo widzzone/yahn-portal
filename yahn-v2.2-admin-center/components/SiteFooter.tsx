@@ -45,7 +45,7 @@ export function SiteFooter() {
 
       <div className="container footer-bottom">
         <span>© 2026 Yayasan Andi Hakim Nasoetion</span>
-        <span>YAHN Unified Portal · V2.4</span>
+        <span>YAHN Unified Portal · V2.5</span>
       </div>
     </footer>
   );
