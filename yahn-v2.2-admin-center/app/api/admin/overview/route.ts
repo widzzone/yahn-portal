@@ -11,7 +11,7 @@ export async function GET(){
     const warnings:string[]=[];
     let scholarship:any=null,donor:any=null;
     try{const d=await callScholarshipBackend('getScholarshipAdminData',{});scholarship=d.admin;}catch(e){warnings.push(`Beasiswa: ${e instanceof Error?e.message:'gagal dimuat'}`)}
-    try{const d=await callDonorBackend('getDonorAdminData',{});donor=d.admin;}catch(e){warnings.push(`Donatur: ${e instanceof Error?e.message:'gagal dimuat'}`)}
+    try{const d=await callDonorBackend('getDonorAdminData',{});donor=d.admin;}catch(e){warnings.push(`Dukungan: ${e instanceof Error?e.message:'gagal dimuat'}`)}
     return NextResponse.json({status:'success',admin:{name:session.name,email:session.email},scholarship,donor,warnings});
   }catch(error){return NextResponse.json({status:'error',message:error instanceof Error?error.message:'Gagal memuat Admin Center.'},{status:400});}
 }

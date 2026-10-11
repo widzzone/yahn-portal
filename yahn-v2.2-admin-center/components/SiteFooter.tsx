@@ -17,7 +17,8 @@ export function SiteFooter() {
             </span>
           </div>
           <p>
-            Portal terpadu untuk seleksi beasiswa, dukungan donatur, dan program Kakak Asuh YAHN.
+            Portal terpadu untuk seleksi beasiswa, dukungan pendidikan, dan program Kakak Asuh
+            YAHN.
           </p>
           <div className="footer-address">
             <strong>Alamat Yayasan</strong>
@@ -31,21 +32,21 @@ export function SiteFooter() {
         <div className="footer-links">
           <strong>Program</strong>
           <Link href="/beasiswa">Beasiswa</Link>
-          <Link href="/donasi">Donasi</Link>
+          <Link href="/donasi">Dukungan</Link>
           <Link href="/kakak-asuh">Kakak Asuh</Link>
         </div>
 
         <div className="footer-links">
           <strong>Portal</strong>
           <Link href="/beasiswa/portal">Mahasiswa</Link>
-          <Link href="/donatur/masuk">Donatur</Link>
+          <Link href="/donatur/masuk">Sahabat YAHN</Link>
           <a href="mailto:yayasan.andihakim@gmail.com">Hubungi YAHN</a>
         </div>
       </div>
 
       <div className="container footer-bottom">
         <span>© 2026 Yayasan Andi Hakim Nasoetion</span>
-        <span>YAHN Unified Portal · V2.5</span>
+        <span>YAHN Unified Portal · V2.7</span>
       </div>
     </footer>
   );
