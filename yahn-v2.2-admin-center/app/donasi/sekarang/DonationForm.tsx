@@ -30,7 +30,7 @@ export default function DonationForm({
   const bank = process.env.NEXT_PUBLIC_DONATION_BANK || 'Bank BRI';
   const account = process.env.NEXT_PUBLIC_DONATION_ACCOUNT || '038701004655566';
   const accountName = process.env.NEXT_PUBLIC_DONATION_ACCOUNT_NAME || 'Beasiswa AHN';
-  const qris = process.env.NEXT_PUBLIC_QRIS_IMAGE_URL || 'https://kommodo.ai/i/Z2SRvjUdvNBvHgUiruAW';
+  const qris = 'https://www.image2url.com/r2/default/images/1791734981716-0ce8fd4f-43e7-43e5-8838-9aa7fe6c6a09.jpeg';
 
   const finalAmount = useMemo(() => (custom ? Number(custom) || 0 : amount), [custom, amount]);
 

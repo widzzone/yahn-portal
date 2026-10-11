@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 
 export default function ScholarshipProgramGuide() {
   const [open, setOpen] = useState(false);
@@ -17,50 +16,53 @@ export default function ScholarshipProgramGuide() {
       </button>
 
       {open && (
-        <div className="scholarship-guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+        <div className="scholarship-guide-modal scholarship271-guide-modal" role="dialog" aria-modal="true" aria-labelledby="guide-title">
           <div className="scholarship-guide-backdrop" onClick={() => setOpen(false)} />
-          <div className="scholarship-guide-card">
+          <div className="scholarship-guide-card scholarship271-guide-card">
             <button type="button" className="scholarship-guide-close" onClick={() => setOpen(false)} aria-label="Tutup panduan">×</button>
-            <h2 id="guide-title">Informasi Pendaftaran YAHN</h2>
-            <div className="scholarship-guide-divider" />
 
-            <section className="scholarship-guide-block">
-              <h3>Syarat Utama</h3>
-              <ul>
-                <li>Mahasiswa S1 IPB semester 4 & 6 (SSMI & FMIPA).</li>
-                <li>IPK terakhir minimal 3.00.</li>
-                <li>Tidak sedang menerima beasiswa lain (Juli – Des 2026).</li>
-                <li className="urgent">Deadline berkas: 03 Juni 2026.</li>
-              </ul>
-            </section>
+            <div className="scholarship271-guide-head">
+              <span className="eyebrow">Panduan Program</span>
+              <h2 id="guide-title">Informasi Pendaftaran YAHN</h2>
+              <p>Ringkasan persyaratan, benefit, dan timeline seleksi dalam satu tampilan.</p>
+            </div>
 
-            <section className="scholarship-guide-highlight">
-              <strong>Benefit Beasiswa</strong>
-              <p>
-                Bantuan <b>UKT atau Living Cost</b> hingga <span>Rp 9.000.000</span> per tahun.
-              </p>
-            </section>
+            <div className="scholarship271-guide-grid">
+              <section className="scholarship271-guide-panel">
+                <div className="scholarship271-guide-label">Syarat Utama</div>
+                <ul className="scholarship271-guide-list">
+                  <li>Mahasiswa S1 IPB semester 4 & 6 (SSMI & FMIPA).</li>
+                  <li>IPK terakhir minimal 3.00.</li>
+                  <li>Tidak sedang menerima beasiswa lain (Juli – Des 2026).</li>
+                  <li className="urgent">Deadline berkas: 03 Juni 2026.</li>
+                </ul>
 
-            <section className="scholarship-guide-block">
-              <h3>Timeline Seleksi</h3>
-              <div className="scholarship-guide-timeline">
-                <article><small>25 Mei s.d 3 Juni</small><strong>Pengisian Berkas</strong></article>
-                <article><small>3 – 10 Juni</small><strong>Seleksi Berkas</strong></article>
-                <article><small>11 – 15 Juni</small><strong>Tahap Wawancara</strong></article>
-                <article className="active"><small>20 Juni</small><strong>Pengumuman</strong></article>
+                <div className="scholarship271-benefit">
+                  <span>Benefit Beasiswa</span>
+                  <strong>Rp9.000.000</strong>
+                  <small>UKT atau Living Cost · maksimum per tahun</small>
+                </div>
+              </section>
+
+              <section className="scholarship271-guide-panel timeline-panel">
+                <div className="scholarship271-guide-label">Timeline Seleksi</div>
+                <div className="scholarship271-timeline">
+                  <article><span>01</span><div><small>25 Mei – 3 Juni</small><strong>Pengisian Berkas</strong></div></article>
+                  <article><span>02</span><div><small>3 – 10 Juni</small><strong>Seleksi Berkas</strong></div></article>
+                  <article><span>03</span><div><small>11 – 15 Juni</small><strong>Tahap Wawancara</strong></div></article>
+                  <article className="active"><span>04</span><div><small>20 Juni</small><strong>Pengumuman</strong></div></article>
+                </div>
+              </section>
+            </div>
+
+            <div className="scholarship271-guide-footer">
+              <div className="scholarship271-guide-help">
+                <span>Butuh bantuan?</span>
+                <a href="mailto:yayasan.andihakim@gmail.com?subject=Pertanyaan%20Beasiswa%20YAHN">yayasan.andihakim@gmail.com</a>
               </div>
-            </section>
-
-            <section className="scholarship-guide-help">
-              <span>Butuh bantuan?</span>
-              <a href="mailto:yayasan.andihakim@gmail.com?subject=Pertanyaan%20Beasiswa%20YAHN">yayasan.andihakim@gmail.com</a>
-            </section>
-
-            <div className="scholarship-guide-actions">
-              <button type="button" className="btn btn-primary btn-lg" onClick={() => setOpen(false)}>
+              <button type="button" className="btn btn-primary" onClick={() => setOpen(false)}>
                 Saya mengerti & siap daftar
               </button>
-              <Link href="/beasiswa" className="scholarship-secondary-button">Lihat halaman program</Link>
             </div>
           </div>
         </div>
