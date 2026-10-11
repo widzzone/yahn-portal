@@ -29,12 +29,12 @@ export default async function ThankYouPage({searchParams}:{searchParams:Promise<
             <div><span>Metode</span><strong>{method}</strong></div>
             <div><span>Status</span><strong className="thank25-status">Menunggu verifikasi</strong></div>
           </div>
-          <div className="thank25-note">Tim YAHN akan memeriksa transaksi pada kanal pembayaran resmi. Setelah terverifikasi, kontribusi akan masuk ke riwayat donor.</div>
+          <div className="thank25-note">Tim YAHN akan memeriksa transaksi pada kanal pembayaran resmi. Setelah terverifikasi, kontribusi akan masuk ke riwayat kontribusi Anda.</div>
           <div className="thank25-actions">
-            <Link className="btn btn-primary" href="/donatur/masuk">Pantau di Portal Donatur →</Link>
+            <Link className="btn btn-primary" href="/donatur/masuk">Pantau di Portal Sahabat →</Link>
             <Link className="btn btn-light" href="/donasi">Kembali ke Donasi</Link>
           </div>
-          <Link className="thank25-again" href="/donasi/sekarang">Saya ingin berdonasi lagi</Link>
+          <Link className="thank25-again" href="/donasi/sekarang">Saya ingin berbagi lagi</Link>
         </div>
       </section>
     </main>

@@ -27,10 +27,10 @@ export default function DonationForm({
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const bank = process.env.NEXT_PUBLIC_DONATION_BANK || 'Rekening belum dikonfigurasi';
-  const account = process.env.NEXT_PUBLIC_DONATION_ACCOUNT || '-';
-  const accountName = process.env.NEXT_PUBLIC_DONATION_ACCOUNT_NAME || 'Yayasan Andi Hakim Nasoetion';
-  const qris = process.env.NEXT_PUBLIC_QRIS_IMAGE_URL || '';
+  const bank = process.env.NEXT_PUBLIC_DONATION_BANK || 'Bank BRI';
+  const account = process.env.NEXT_PUBLIC_DONATION_ACCOUNT || '038701004655566';
+  const accountName = process.env.NEXT_PUBLIC_DONATION_ACCOUNT_NAME || 'Beasiswa AHN';
+  const qris = process.env.NEXT_PUBLIC_QRIS_IMAGE_URL || 'https://kommodo.ai/i/Z2SRvjUdvNBvHgUiruAW';
 
   const finalAmount = useMemo(() => (custom ? Number(custom) || 0 : amount), [custom, amount]);
 
@@ -83,10 +83,10 @@ export default function DonationForm({
       <div className="donation24-main">
         <div className="donation24-intro">
           <span className="pill">Tanpa akun</span>
-          <h2>Terima kasih sudah memilih untuk berbagi.</h2>
+          <h2>Terima kasih sudah memilih ikut menjaga masa depan pendidikan.</h2>
           <p>
-            Isi tiga langkah sederhana berikut. Nominal, metode pembayaran, dan data singkat untuk
-            verifikasi.
+            Cukup tentukan nominal, pilih metode pembayaran, lalu kirim data singkat agar transaksi
+            Anda mudah diverifikasi.
           </p>
         </div>
 
@@ -94,7 +94,7 @@ export default function DonationForm({
           <div className="donation24-step-head">
             <b>1</b>
             <div>
-              <strong>Pilih nominal donasi</strong>
+              <strong>Pilih nominal dukungan</strong>
               <span>Mulai dari Rp10.000, sesuaikan dengan kenyamanan Anda.</span>
             </div>
           </div>
@@ -137,36 +137,39 @@ export default function DonationForm({
             </div>
           </div>
 
-          <div className="donation23-payment-tabs donation24-payment-tabs">
+          <div className="donation24-payment-tabs compact-tabs">
             <button type="button" className={method === 'QRIS' ? 'active' : ''} onClick={() => setMethod('QRIS')}>
-              ▦ QRIS
+              QRIS
             </button>
             <button
               type="button"
               className={method === 'Transfer Bank' ? 'active' : ''}
               onClick={() => setMethod('Transfer Bank')}
             >
-              ▣ Transfer Bank
+              Transfer
             </button>
           </div>
 
           {method === 'QRIS' ? (
-            <div className="donation24-pay-panel donation24-qris-panel">
+            <div className="donation24-pay-panel donation24-qris-panel premium-pay-card">
               <div className="qris donation24-qris-box">
-                {qris ? <img src={qris} alt="QRIS YAHN" /> : <span>QRIS belum dikonfigurasi.</span>}
+                {qris ? <img src={qris} alt="QRIS Beasiswa AHN" /> : <span>QRIS belum dikonfigurasi.</span>}
               </div>
               <div className="donation24-pay-copy">
-                <span className="pill">Scan & bayar</span>
-                <h3>Scan QRIS YAHN</h3>
+                <span className="pill">QRIS resmi</span>
+                <h3>Scan QRIS Beasiswa AHN</h3>
                 <p>
                   Gunakan aplikasi bank atau dompet digital Anda, lalu masukkan nominal{' '}
                   <b>{fmt(finalAmount)}</b>.
                 </p>
+                <div className="payment-note-inline">Atas nama: <strong>Beasiswa AHN</strong></div>
               </div>
             </div>
           ) : (
-            <div className="donation24-pay-panel donation24-transfer-panel">
-              <div className="donation24-bank-badge">YAHN</div>
+            <div className="donation24-pay-panel donation24-transfer-panel premium-pay-card">
+              <div className="donation24-bank-logo-wrap">
+                <img src="/logo-yahn.png" alt="Logo YAHN" className="donation24-bank-logo" />
+              </div>
               <div className="donation24-pay-copy">
                 <span className="pill">Transfer resmi</span>
                 <h3>{bank}</h3>
@@ -197,7 +200,7 @@ export default function DonationForm({
 
           <div className="form-row donation24-form-row">
             <div className="field">
-              <label>Nama donatur</label>
+              <label>Nama lengkap</label>
               <input className="input" name="name" required placeholder="Nama lengkap" />
             </div>
             <div className="field">
@@ -226,9 +229,7 @@ export default function DonationForm({
           <div className="form-security donation24-security">
             🔒 Konfirmasi Anda masuk ke database YAHN dan akan diverifikasi oleh admin.
           </div>
-          {status && !success && (
-            <div className="notice notice-warn">{status}</div>
-          )}
+          {status && !success && <div className="notice notice-warn">{status}</div>}
         </div>
       </div>
 
@@ -236,7 +237,7 @@ export default function DonationForm({
         <div className="donation24-summary-card">
           <div className="donation24-summary-head">
             <span className="pill">Ringkasan</span>
-            <h3>Donasi Anda</h3>
+            <h3>Dukungan Anda</h3>
           </div>
           <div className="donation24-summary-amount">{fmt(finalAmount)}</div>
           <div className="donation24-summary-list">
@@ -250,15 +251,14 @@ export default function DonationForm({
             </div>
           </div>
           <div className="donation24-summary-note">
-            Setelah Anda mengirim konfirmasi, tim YAHN akan mencocokkan transaksi pada kanal
-            pembayaran resmi.
+            Setelah Anda mengirim konfirmasi, tim YAHN akan mencocokkan transaksi pada kanal pembayaran resmi.
           </div>
         </div>
 
         <div className="donation24-help-card">
           <strong>Perlu bantuan?</strong>
-          <p>Anda dapat menghubungi tim YAHN melalui email untuk pertanyaan terkait donasi.</p>
-          <a href="mailto:yayasan.andihakim@gmail.com">yayasan.andihakim@gmail.com</a>
+          <p>Anda dapat menghubungi tim YAHN melalui email untuk pertanyaan terkait dukungan pendidikan.</p>
+          <a href="mailto:yayasan.andihakim@gmail.com?subject=Pertanyaan%20Donasi%20YAHN">yayasan.andihakim@gmail.com</a>
         </div>
       </aside>
     </form>

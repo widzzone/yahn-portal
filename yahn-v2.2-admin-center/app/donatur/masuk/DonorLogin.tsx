@@ -15,7 +15,7 @@ export default function DonorLogin() {
     try {
       const r = await fetch('/api/donor/request-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ email }) });
       const data = await r.json(); if (!r.ok) throw new Error(data.message);
-      setSent(true); setMessage('Kode akses sudah dikirim ke email donatur yang terdaftar.');
+      setSent(true); setMessage('Kode akses sudah dikirim ke email yang terdaftar.');
     } catch (e) { setMessage(e instanceof Error ? e.message : 'Gagal mengirim kode.'); }
     finally { setLoading(false); }
   }
@@ -32,11 +32,11 @@ export default function DonorLogin() {
 
   return <section className="donor25-login-card">
     <div className="donor25-login-icon">♡</div>
-    <span className="eyebrow">Portal Donatur</span>
+    <span className="eyebrow">Portal Sahabat</span>
     <h2>{sent ? 'Masukkan kode akses' : 'Masuk ke dashboard Anda'}</h2>
-    <p>{sent ? `Kode 6 digit telah dikirim ke ${email}.` : 'Tidak perlu password. Masukkan email yang pernah digunakan saat berdonasi.'}</p>
+    <p>{sent ? `Kode 6 digit telah dikirim ke ${email}.` : 'Tidak perlu password. Masukkan email yang pernah digunakan saat berbagi melalui YAHN.'}</p>
     {!sent ? <form onSubmit={requestCode}>
-      <div className="field"><label>Email donatur</label><input className="input" type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="nama@email.com" /></div>
+      <div className="field"><label>Email terdaftar</label><input className="input" type="email" required value={email} onChange={e=>setEmail(e.target.value)} placeholder="nama@email.com" /></div>
       <button className="btn btn-primary btn-block" disabled={loading}>{loading ? 'Mengirim...' : 'Kirim kode akses →'}</button>
     </form> : <form onSubmit={verify}>
       <div className="field"><label>Kode 6 digit</label><input className="input otp-input" inputMode="numeric" maxLength={6} required value={code} onChange={e=>setCode(e.target.value.replace(/\D/g,''))} placeholder="000000" /></div>
@@ -44,6 +44,6 @@ export default function DonorLogin() {
       <button className="text-button" type="button" onClick={()=>{setSent(false);setCode('');setMessage('')}}>Gunakan email lain</button>
     </form>}
     {message && <div className="notice notice-info donor25-message">{message}</div>}
-    <div className="donor25-login-foot">Belum pernah berdonasi? <a href="/donasi/sekarang">Mulai donasi pertama →</a></div>
+    <div className="donor25-login-foot">Belum pernah berbagi? <a href="/donasi/sekarang">Mulai dukungan pertama →</a></div>
   </section>;
 }

@@ -32,7 +32,7 @@ export function DonationQuickStart(){
       <div><small>MULAI BERBAGI</small><h2>Pilih cara yang nyaman</h2></div>
     </div>
 
-    <div className="donation23-mode-tabs" role="tablist" aria-label="Pilihan donasi">
+    <div className="donation23-mode-tabs" role="tablist" aria-label="Pilihan dukungan">
       <button type="button" className={mode==='once'?'active':''} onClick={()=>setMode('once')}>Sekali</button>
       <button type="button" className={mode==='monthly'?'active':''} onClick={()=>setMode('monthly')}>Bulanan</button>
       <button type="button" className={mode==='sponsor'?'active':''} onClick={()=>setMode('sponsor')}>Kakak Asuh</button>
@@ -56,15 +56,15 @@ export function DonationQuickStart(){
         <select value={day} onChange={e=>setDay(Number(e.target.value))}>{[1,5,10,15,20,25,28].map(d=><option key={d} value={d}>{d}</option>)}</select>
       </div>}
 
-      <div className="donation23-selected"><span>{mode==='monthly'?'Komitmen bulanan':'Donasi pilihan Anda'}</span><strong>{rupiah(finalAmount)}</strong></div>
+      <div className="donation23-selected"><span>{mode==='monthly'?'Komitmen bulanan':'Dukungan pilihan Anda'}</span><strong>{rupiah(finalAmount)}</strong></div>
     </> : <div className="donation23-sponsor-preview">
       <div className="donation23-sponsor-icon">✦</div>
       <div><strong>Temani satu perjalanan pendidikan</strong><p>Pilih mahasiswa penerima, lihat kebutuhan UKT atau living cost, lalu ajukan dukungan Kakak Asuh.</p></div>
     </div>}
 
     <button type="button" className="donation23-primary" onClick={go} disabled={mode!=='sponsor'&&finalAmount<10000}>
-      {mode==='once'?'Lanjutkan donasi →':mode==='monthly'?'Jadi donatur bulanan →':'Pilih adik asuh →'}
+      {mode==='once'?'Lanjutkan donasi →':mode==='monthly'?'Simpan dukungan bulanan →':'Pilih adik asuh →'}
     </button>
-    <p className="donation23-safe-note">Tidak ada biaya untuk membuka portal. Donasi satu kali tidak mewajibkan akun.</p>
+    <p className="donation23-safe-note">Tidak ada biaya untuk membuka portal. Dukungan satu kali tidak mewajibkan akun.</p>
   </div>;
 }
