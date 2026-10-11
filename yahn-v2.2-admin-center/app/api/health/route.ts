@@ -1,1 +1,7 @@
-export async function GET(){return Response.json({status:'ok',service:'yahn-v2-vercel',time:new Date().toISOString()});}
+export async function GET() {
+  return Response.json({
+    status: 'ok',
+    service: 'yahn-unified-portal',
+    time: new Date().toISOString(),
+  });
+}
