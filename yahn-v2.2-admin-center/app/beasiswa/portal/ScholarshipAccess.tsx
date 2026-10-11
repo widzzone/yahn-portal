@@ -1,4 +1,5 @@
 'use client';
+
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -12,25 +13,31 @@ export default function ScholarshipAccess() {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState('');
 
+  function changeMode(nextMode: 'login' | 'register') {
+    setMode(nextMode);
+    setSent(false);
+    setCode('');
+    setMsg('');
+  }
+
   async function requestOtp(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setMsg('');
 
     try {
-      const r = await fetch('/api/scholarship/request-otp', {
+      const response = await fetch('/api/scholarship/request-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, mode })
+        body: JSON.stringify({ email, name, mode }),
       });
-
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.message);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Gagal mengirim kode akses.');
 
       setSent(true);
       setMsg('Kode akses telah dikirim ke email Anda.');
-    } catch (e) {
-      setMsg(e instanceof Error ? e.message : 'Gagal mengirim kode.');
+    } catch (error) {
+      setMsg(error instanceof Error ? error.message : 'Gagal mengirim kode akses.');
     } finally {
       setLoading(false);
     }
@@ -42,116 +49,122 @@ export default function ScholarshipAccess() {
     setMsg('');
 
     try {
-      const r = await fetch('/api/scholarship/verify-otp', {
+      const response = await fetch('/api/scholarship/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code })
+        body: JSON.stringify({ email, code }),
       });
-
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.message);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Kode akses tidak valid.');
 
       router.push('/beasiswa/dashboard');
       router.refresh();
-    } catch (e) {
-      setMsg(e instanceof Error ? e.message : 'Kode tidak valid.');
+    } catch (error) {
+      setMsg(error instanceof Error ? error.message : 'Kode akses tidak valid.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="auth-card scholarship-auth scholarship-auth-premium">
-      <div className="auth-tabs">
+    <div className="scholarship-login-card">
+      <div className="scholarship-auth-tabs" role="tablist" aria-label="Pilihan akses portal beasiswa">
         <button
-          className={mode === 'login' ? 'active' : ''}
-          onClick={() => {
-            setMode('login');
-            setSent(false);
-            setMsg('');
-          }}
           type="button"
+          className={mode === 'login' ? 'active' : ''}
+          onClick={() => changeMode('login')}
         >
           Masuk
         </button>
-
         <button
-          className={mode === 'register' ? 'active' : ''}
-          onClick={() => {
-            setMode('register');
-            setSent(false);
-            setMsg('');
-          }}
           type="button"
+          className={mode === 'register' ? 'active' : ''}
+          onClick={() => changeMode('register')}
         >
           Daftar Akun
         </button>
       </div>
 
-      <h2>{sent ? 'Cek email Anda' : mode === 'login' ? 'Masuk ke Portal Beasiswa' : 'Daftar Akun Baru'}</h2>
-
-      <p>
-        {sent
-          ? `Masukkan kode 6 digit yang dikirim ke ${email}.`
-          : 'Portal menggunakan kode akses email, jadi Anda tidak perlu mengingat password baru.'}
-      </p>
+      <div className="scholarship-login-heading">
+        <span className="scholarship-login-eyebrow">Portal Beasiswa YAHN</span>
+        <h2>
+          {sent
+            ? 'Cek email Anda'
+            : mode === 'login'
+              ? 'Masuk ke Portal Beasiswa'
+              : 'Buat Akun Peserta'}
+        </h2>
+        <p>
+          {sent
+            ? `Masukkan kode 6 digit yang kami kirim ke ${email}.`
+            : mode === 'login'
+              ? 'Gunakan email terdaftar untuk menerima kode akses sekali pakai.'
+              : 'Daftarkan nama dan email aktif untuk memulai proses pendaftaran beasiswa.'}
+        </p>
+      </div>
 
       {!sent ? (
-        <form onSubmit={requestOtp}>
+        <form className="scholarship-access-form" onSubmit={requestOtp}>
           {mode === 'register' && (
-            <div className="field">
-              <label>Nama lengkap</label>
+            <label className="scholarship-field">
+              <span>Nama Lengkap</span>
               <input
-                className="input"
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Sesuai KTM"
+                autoComplete="name"
               />
-            </div>
+            </label>
           )}
 
-          <div className="field">
-            <label>Email terdaftar</label>
+          <label className="scholarship-field">
+            <span>{mode === 'login' ? 'Email Terdaftar' : 'Email Aktif'}</span>
             <input
-              className="input"
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="name@email.com"
+              placeholder="nama@email.com"
+              autoComplete="email"
             />
-          </div>
+          </label>
 
-          <button className="btn btn-primary btn-block" disabled={loading}>
-            {loading ? 'Mengirim...' : mode === 'login' ? 'Kirim kode masuk →' : 'Daftar & kirim kode →'}
+          <button className="scholarship-primary-button" disabled={loading}>
+            {loading
+              ? 'Mengirim kode...'
+              : mode === 'login'
+                ? 'Kirim Kode Masuk →'
+                : 'Daftar & Kirim Kode →'}
           </button>
         </form>
       ) : (
-        <form onSubmit={verify}>
-          <div className="field">
-            <label>Kode 6 digit</label>
+        <form className="scholarship-access-form" onSubmit={verify}>
+          <label className="scholarship-field">
+            <span>Kode 6 Digit</span>
             <input
-              className="input otp-input"
+              className="scholarship-otp-input"
               inputMode="numeric"
               maxLength={6}
               required
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
               placeholder="000000"
+              autoComplete="one-time-code"
             />
-          </div>
+          </label>
 
-          <button className="btn btn-primary btn-block" disabled={loading || code.length !== 6}>
-            {loading ? 'Memverifikasi...' : 'Masuk ke portal →'}
+          <button className="scholarship-primary-button" disabled={loading || code.length !== 6}>
+            {loading ? 'Memverifikasi...' : 'Masuk ke Portal →'}
           </button>
 
           <button
             type="button"
-            className="text-button"
+            className="scholarship-secondary-button"
             onClick={() => {
               setSent(false);
               setCode('');
+              setMsg('');
             }}
           >
             Kirim ulang / ganti email
@@ -159,7 +172,12 @@ export default function ScholarshipAccess() {
         </form>
       )}
 
-      {msg && <div className="notice notice-info">{msg}</div>}
+      {msg && <div className="scholarship-form-message">{msg}</div>}
+
+      <div className="scholarship-security-note">
+        <span aria-hidden="true">✓</span>
+        Akses portal dilindungi dengan kode verifikasi melalui email.
+      </div>
     </div>
   );
 }

@@ -1,78 +1,87 @@
+import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
 import ScholarshipAccess from './ScholarshipAccess';
 
 export default function ScholarshipPortal() {
   return (
     <>
       <SiteHeader />
-      <main className="auth-page scholarship-auth-page">
-        <div className="auth-shell auth-shell-premium">
-          <div className="auth-copy auth-copy-brand">
-            <div className="auth-brand-top">
-              <img
-                src="https://www.image2url.com/r2/default/images/1778748465991-f03167b3-5445-46b9-98a8-f3059ee73afd.png"
-                alt="Logo YAHN"
-                className="auth-brand-logo"
-              />
-              <div className="auth-brand-text">
-                <span className="auth-brand-name">YAYASAN ANDI HAKIM NASOETION</span>
-                <small>DEDIKASI UNTUK PENDIDIKAN MASA DEPAN</small>
+      <main className="scholarship-portal-page">
+        <div className="scholarship-portal-shell">
+          <section className="scholarship-brand-panel">
+            <span className="scholarship-brand-ring scholarship-brand-ring-a" aria-hidden="true" />
+            <span className="scholarship-brand-ring scholarship-brand-ring-b" aria-hidden="true" />
+
+            <div className="scholarship-brand-lockup">
+              <span className="scholarship-brand-logo-wrap">
+                <img src="/logo-yahn.png" alt="Logo Yayasan Andi Hakim Nasoetion" className="scholarship-brand-logo" />
+              </span>
+              <div>
+                <strong>YAYASAN ANDI HAKIM NASOETION</strong>
+                <span>DEDIKASI UNTUK PENDIDIKAN MASA DEPAN</span>
               </div>
             </div>
 
-            <h1>Membangun Masa Depan.</h1>
-            <p>
-              Portal resmi pendaftaran program beasiswa Andi Hakim Nasoetion
-              untuk pengembangan kapasitas generasi emas Indonesia.
-            </p>
+            <div className="scholarship-brand-copy">
+              <span className="scholarship-kicker">Portal Peserta YAHN</span>
+              <h1>Membangun Masa Depan.</h1>
+              <p>
+                Portal resmi pendaftaran program Beasiswa Andi Hakim Nasoetion untuk mendukung
+                keberlanjutan pendidikan dan pengembangan kapasitas generasi muda Indonesia.
+              </p>
+            </div>
 
-            <div className="feature-list">
-              <div className="feature-item">
-                <div className="feature-icon">📘</div>
+            <div className="scholarship-benefits">
+              <div className="scholarship-benefit-row">
+                <span className="scholarship-benefit-icon" aria-hidden="true">▣</span>
                 <div>
                   <strong>Biaya Pendidikan (UKT)</strong>
-                  <span>Dukungan dana semester mahasiswa.</span>
+                  <span>Dukungan biaya semester sesuai hasil evaluasi yayasan.</span>
                 </div>
               </div>
-
-              <div className="feature-item">
-                <div className="feature-icon">🏠</div>
+              <div className="scholarship-benefit-row">
+                <span className="scholarship-benefit-icon" aria-hidden="true">⌂</span>
                 <div>
                   <strong>Biaya Hidup (Living Cost)</strong>
-                  <span>Bantuan dana kebutuhan harian.</span>
+                  <span>Bantuan kebutuhan harian untuk menjaga keberlanjutan studi.</span>
                 </div>
               </div>
             </div>
 
             <a
-              href="https://www.youtube.com/"
+              className="scholarship-video-link"
+              href="https://drive.google.com/file/d/1OVvHzYFlbPDmcTuhNYK6rPlt3ivkpB0W/view?usp=sharing"
               target="_blank"
               rel="noreferrer"
-              className="video-pill"
             >
-              <span className="video-icon">▶</span>
-              <div>
-                <small>TONTON VIDEO</small>
+              <span className="scholarship-video-play" aria-hidden="true">▶</span>
+              <span>
+                <small>Tonton Video</small>
                 <strong>Sejarah Beasiswa YAHN</strong>
-              </div>
+              </span>
             </a>
-          </div>
+          </section>
 
-          <div className="auth-side-stack">
-            <div className="info-box">
-              <div className="info-box-icon">i</div>
-              <div>
+          <section className="scholarship-access-column">
+            <Link href="/beasiswa#alur" className="scholarship-info-card">
+              <span className="scholarship-info-icon" aria-hidden="true">i</span>
+              <span>
                 <strong>Belum kenal Program YAHN?</strong>
-                <p>Pelajari persyaratan & panduan →</p>
-              </div>
-            </div>
+                <small>Pelajari program, persyaratan & alur seleksi →</small>
+              </span>
+            </Link>
 
             <ScholarshipAccess />
-          </div>
+
+            <div className="scholarship-help-row">
+              <span>Butuh bantuan?</span>
+              <a href="mailto:yayasan.andihakim@gmail.com?subject=Pertanyaan%20Beasiswa%20YAHN">
+                yayasan.andihakim@gmail.com
+              </a>
+            </div>
+          </section>
         </div>
       </main>
-      <SiteFooter />
     </>
   );
 }
