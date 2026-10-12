@@ -31,7 +31,7 @@ export default function StudentHome() {
         <div className="container role29-cards">
           <Link href="/beasiswa" className="role29-card"><span>Program</span><h3>Beasiswa YAHN</h3><p>Lihat program aktif, persyaratan, benefit, dan timeline seleksi.</p><b>Pelajari program →</b></Link>
           <Link href="/beasiswa/portal" className="role29-card"><span>Akun</span><h3>Masuk atau Daftar</h3><p>Gunakan satu akun permanen untuk seluruh periode pendaftaran YAHN.</p><b>Buka portal →</b></Link>
-          <Link href="/beasiswa/dashboard" className="role29-card"><span>Riwayat</span><h3>Status & Pendaftaran</h3><p>Pantau aplikasi aktif dan riwayat batch sebelumnya dalam satu dashboard.</p><b>Lihat dashboard →</b></Link>
+          <Link href="/beasiswa/portal" className="role29-card"><span>Dashboard</span><h3>Dashboard Mahasiswa</h3><p>Setelah masuk, status aplikasi, jadwal wawancara, hasil seleksi, dan riwayat batch tersedia di dashboard pribadi.</p><b>Masuk ke dashboard →</b></Link>
         </div>
       </section>
     </main>

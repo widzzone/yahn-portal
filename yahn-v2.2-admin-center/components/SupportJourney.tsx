@@ -19,7 +19,7 @@ const options = [
     title: 'Hadir Setiap Bulan',
     subtitle: 'Jadikan kepedulian sebagai kebiasaan kecil yang terus memberi dampak.',
     bestFor: 'Cocok untuk Anda yang ingin hadir secara konsisten.',
-    points: ['Nominal fleksibel', 'Pilih tanggal pengingat', 'Riwayat dukungan tersimpan'],
+    points: ['Mulai Rp1.000.000 / bulan', 'Pilih tanggal pengingat', 'Riwayat dukungan tersimpan'],
     href: '/donasi/bulanan',
     cta: 'Mulai dukungan bulanan',
   },

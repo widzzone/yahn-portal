@@ -1,15 +1,16 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type PortalMode = 'student' | 'supporter';
 
-const studentLinks = [
+type StudentSession = 'guest' | 'student' | 'admin';
+
+const studentPublicLinks = [
   { href: '/mahasiswa', label: 'Beranda' },
   { href: '/beasiswa', label: 'Program Beasiswa' },
-  { href: '/beasiswa/portal', label: 'Masuk / Daftar' },
-  { href: '/beasiswa/dashboard', label: 'Riwayat & Status' },
+  { href: '/beasiswa#informasi-pendaftaran', label: 'Panduan' },
 ];
 
 const supporterLinks = [
@@ -22,11 +23,31 @@ const supporterLinks = [
 
 export function PortalHeader({ mode }: { mode: PortalMode }) {
   const [open, setOpen] = useState(false);
-  const links = mode === 'student' ? studentLinks : supporterLinks;
+  const [studentSession, setStudentSession] = useState<StudentSession>('guest');
+
+  useEffect(() => {
+    if (mode !== 'student') return;
+    let active = true;
+    fetch('/api/scholarship/me', { cache: 'no-store' })
+      .then(async (response) => {
+        if (!active || !response.ok) return;
+        const data = await response.json();
+        if (!active) return;
+        setStudentSession(String(data?.user?.role || '').toLowerCase() === 'admin' ? 'admin' : 'student');
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [mode]);
+
+  const links = mode === 'student' ? studentPublicLinks : supporterLinks;
   const homeHref = mode === 'student' ? '/mahasiswa' : '/sahabat';
   const badge = mode === 'student' ? 'Portal Mahasiswa' : 'Portal Sahabat';
   const action = mode === 'student'
-    ? { href: '/beasiswa/portal', label: 'Masuk Mahasiswa' }
+    ? studentSession === 'admin'
+      ? { href: '/admin', label: 'Admin Center' }
+      : studentSession === 'student'
+        ? { href: '/beasiswa/dashboard', label: 'Dashboard Saya' }
+        : { href: '/beasiswa/portal', label: 'Masuk / Daftar' }
     : { href: '/donatur/masuk', label: 'Portal Sahabat' };
 
   return (

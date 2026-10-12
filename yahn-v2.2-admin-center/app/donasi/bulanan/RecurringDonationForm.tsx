@@ -2,12 +2,14 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 
-const presets = [50000, 100000, 250000, 500000, 1000000];
+const MIN_MONTHLY = 1_000_000;
+const presets = [1_000_000, 2_500_000, 5_000_000, 10_000_000];
 const fmt = (v: number) =>
   new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(v || 0);
 
-export default function RecurringDonationForm({ initialAmount = 100000, initialDay = 5 }: { initialAmount?: number; initialDay?: number }) {
-  const [amount, setAmount] = useState(initialAmount);
+export default function RecurringDonationForm({ initialAmount = MIN_MONTHLY, initialDay = 5 }: { initialAmount?: number; initialDay?: number }) {
+  const safeInitial = Math.max(MIN_MONTHLY, initialAmount || MIN_MONTHLY);
+  const [amount, setAmount] = useState(safeInitial);
   const [custom, setCustom] = useState('');
   const [day, setDay] = useState(initialDay);
   const [loading, setLoading] = useState(false);
@@ -18,11 +20,15 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
     setMessage('');
     setSuccess(false);
-    const form = new FormData(e.currentTarget);
+    if (finalAmount < MIN_MONTHLY) {
+      setMessage('Komitmen bulanan dimulai dari Rp1.000.000.');
+      return;
+    }
 
+    setLoading(true);
+    const form = new FormData(e.currentTarget);
     try {
       const response = await fetch('/api/recurring', {
         method: 'POST',
@@ -41,7 +47,7 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
       setMessage(data.message || 'Komitmen bulanan berhasil disimpan.');
       (e.currentTarget as HTMLFormElement).reset();
       setCustom('');
-      setAmount(initialAmount);
+      setAmount(safeInitial);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Gagal menyimpan komitmen.');
     } finally {
@@ -50,14 +56,13 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
   }
 
   return (
-    <form className="donation24-shell recurring26-shell" onSubmit={submit}>
+    <form className="donation24-shell recurring26-shell recurring121-shell" onSubmit={submit}>
       <div className="donation24-main recurring26-main">
         <div className="donation24-intro">
           <span className="pill">Dukungan bulanan</span>
-          <h2>Jadikan kebaikan sebagai kebiasaan yang ringan dan konsisten.</h2>
+          <h2>Bangun komitmen yang konsisten, tanpa proses yang rumit.</h2>
           <p>
-            Tentukan nominal dan tanggal pengingat. Tim YAHN akan mencatat komitmen Anda dan
-            membantu mengingatkan setiap bulan.
+            Pilih nominal mulai Rp1.000.000 per bulan dan tentukan kapan Anda ingin menerima pengingat.
           </p>
         </div>
 
@@ -66,10 +71,10 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
             <b>1</b>
             <div>
               <strong>Pilih nominal bulanan</strong>
-              <span>Nominal dapat diperbarui kemudian jika kebutuhan berubah.</span>
+              <span>Komitmen bulanan dimulai dari Rp1.000.000.</span>
             </div>
           </div>
-          <div className="amounts donation24-amounts">
+          <div className="amounts donation121-monthly-amounts">
             {presets.map((v) => (
               <button
                 type="button"
@@ -86,7 +91,16 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
           </div>
           <div className="field donation24-custom-field">
             <label>Nominal lainnya</label>
-            <input className="input" type="number" min="10000" value={custom} onChange={(e) => setCustom(e.target.value)} placeholder="Contoh: 150000" />
+            <input
+              className="input"
+              type="number"
+              min={MIN_MONTHLY}
+              step="50000"
+              value={custom}
+              onChange={(e) => setCustom(e.target.value)}
+              placeholder="Minimal 1000000"
+            />
+            {custom && Number(custom) < MIN_MONTHLY && <small className="field-error">Minimal dukungan bulanan Rp1.000.000.</small>}
           </div>
         </section>
 
@@ -95,7 +109,7 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
             <b>2</b>
             <div>
               <strong>Pilih tanggal pengingat</strong>
-              <span>Pengingat dikirim ringan dan tidak mengganggu.</span>
+              <span>Pilih tanggal yang paling sesuai dengan ritme bulanan Anda.</span>
             </div>
           </div>
           <div className="recurring26-days">
@@ -105,15 +119,15 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
               </button>
             ))}
           </div>
-          <div className="recurring26-tip">Pengingat akan berhenti untuk bulan berjalan setelah pembayaran terverifikasi.</div>
+          <div className="recurring26-tip">Pengingat bulan berjalan dapat dihentikan setelah pembayaran terverifikasi.</div>
         </section>
 
         <section className="donation24-step">
           <div className="donation24-step-head">
             <b>3</b>
             <div>
-              <strong>Lengkapi data singkat</strong>
-              <span>Data ini dipakai untuk pencatatan komitmen dan pengiriman pengingat.</span>
+              <strong>Lengkapi kontak</strong>
+              <span>Email dan WhatsApp digunakan untuk pengingat serta informasi status dukungan.</span>
             </div>
           </div>
           <div className="form-row donation24-form-row">
@@ -127,13 +141,13 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
             </div>
           </div>
           <div className="field">
-            <label>WhatsApp (opsional)</label>
-            <input className="input" name="whatsapp" placeholder="08xxxxxxxxxx" />
+            <label>WhatsApp aktif</label>
+            <input className="input" name="whatsapp" required placeholder="08xxxxxxxxxx" />
           </div>
         </section>
 
         <div className="donation24-submit-wrap">
-          <button className="btn btn-accent btn-block donation24-confirm-btn" disabled={loading || finalAmount < 10000}>
+          <button className="btn btn-accent btn-block donation24-confirm-btn" disabled={loading || finalAmount < MIN_MONTHLY}>
             {loading ? 'Menyimpan komitmen...' : 'Simpan dukungan bulanan →'}
           </button>
           {message && <div className={`notice ${success ? 'notice-ok' : 'notice-warn'}`}>{message}</div>}
@@ -148,21 +162,13 @@ export default function RecurringDonationForm({ initialAmount = 100000, initialD
           </div>
           <div className="donation24-summary-amount">{fmt(finalAmount)}</div>
           <div className="donation24-summary-list">
+            <div><span>Minimum program</span><strong>Rp1.000.000</strong></div>
             <div><span>Pengingat</span><strong>Setiap tanggal {day}</strong></div>
-            <div><span>Status</span><strong>Aktif setelah tersimpan</strong></div>
-            <div><span>Portal</span><strong>Dapat dipantau di Portal Sahabat</strong></div>
+            <div><span>Portal</span><strong>Portal Sahabat YAHN</strong></div>
           </div>
           <div className="donation24-summary-note">
-            Setelah komitmen tersimpan, Anda dapat melakukan pembayaran tiap bulan melalui kanal resmi YAHN dan memantau histori dukungan dari portal.
+            Setelah komitmen tersimpan, riwayat dukungan dapat dipantau melalui Portal Sahabat.
           </div>
-        </div>
-        <div className="donation24-help-card recurring26-how">
-          <strong>Alur singkat</strong>
-          <ul className="recurring26-steps">
-            <li>Pilih nominal bulanan.</li>
-            <li>Tentukan tanggal pengingat.</li>
-            <li>Simpan komitmen dan tunggu pengingat pertama.</li>
-          </ul>
         </div>
       </aside>
     </form>

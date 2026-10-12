@@ -53,7 +53,7 @@ export default function DonationForm({
   const qris = '/qris-yahn.jpeg';
 
   const finalAmount = useMemo(() => (custom ? Number(custom) || 0 : amount), [custom, amount]);
-  const proofRequired = method === 'Transfer Bank';
+  const proofRequired = true;
 
   async function copyAccount() {
     try {
@@ -88,8 +88,8 @@ export default function DonationForm({
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus('');
-    if (proofRequired && !proof) {
-      setStatus('Untuk transfer bank, mohon upload bukti pembayaran terlebih dahulu.');
+    if (!proof) {
+      setStatus('Bukti pembayaran wajib dilampirkan sebelum konfirmasi dikirim.');
       return;
     }
 
@@ -221,6 +221,11 @@ export default function DonationForm({
                   <b>{fmt(finalAmount)}</b>.
                 </p>
                 <div className="payment-note-inline">Atas nama: <strong>Yayasan Andi Hakim Nasoetion</strong></div>
+                <div className="qris121-actions">
+                  <a className="qris121-download" href={qris} download="QRIS-YAHN.jpeg">↓ Download QRIS</a>
+                  <a className="qris121-open" href={qris} target="_blank" rel="noreferrer">Buka QRIS ↗</a>
+                </div>
+                <small className="qris121-tip">Di HP, simpan QRIS ke galeri lalu pilih fitur scan dari galeri pada aplikasi mobile banking Anda.</small>
               </div>
             </div>
           ) : (
@@ -269,9 +274,9 @@ export default function DonationForm({
 
           <div className="field">
             <label>
-              WhatsApp <span style={{ fontWeight: 500, textTransform: 'none' }}>(opsional)</span>
+              WhatsApp
             </label>
-            <input className="input" name="whatsapp" placeholder="08xxxxxxxxxx" />
+            <input className="input" name="whatsapp" required placeholder="08xxxxxxxxxx" />
           </div>
 
           <div className={`proof11-upload ${proof ? 'has-file' : ''}`}>
@@ -280,10 +285,10 @@ export default function DonationForm({
                 <span className="proof11-icon">↥</span>
                 <div>
                   <strong>Upload bukti pembayaran</strong>
-                  <p>{proofRequired ? 'Wajib untuk transfer bank.' : 'Opsional untuk QRIS, tetapi membantu mempercepat verifikasi.'}</p>
+                  <p>Wajib untuk QRIS maupun transfer agar tim YAHN dapat memverifikasi transaksi.</p>
                 </div>
               </div>
-              <span className={`proof11-badge ${proofRequired ? 'required' : ''}`}>{proofRequired ? 'Wajib' : 'Opsional'}</span>
+              <span className="proof11-badge required">Wajib</span>
             </div>
 
             {!proof ? (
@@ -313,7 +318,7 @@ export default function DonationForm({
         <div className="donation24-submit-wrap">
           <button
             className="btn btn-accent btn-block donation24-confirm-btn"
-            disabled={loading || finalAmount < 10000 || (proofRequired && !proof)}
+            disabled={loading || finalAmount < 10000 || !proof}
           >
             {loading ? 'Mengunggah & menyimpan...' : 'Kirim konfirmasi pembayaran →'}
           </button>
@@ -333,7 +338,7 @@ export default function DonationForm({
           <div className="donation24-summary-amount">{fmt(finalAmount)}</div>
           <div className="donation24-summary-list">
             <div><span>Metode</span><strong>{method}</strong></div>
-            <div><span>Bukti</span><strong>{proof ? 'Siap diupload ✓' : proofRequired ? 'Belum dilampirkan' : 'Opsional'}</strong></div>
+            <div><span>Bukti</span><strong>{proof ? 'Siap diupload ✓' : 'Belum dilampirkan'}</strong></div>
             <div><span>Status</span><strong>Menunggu verifikasi</strong></div>
           </div>
           <div className="donation24-summary-note">

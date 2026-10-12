@@ -13,14 +13,12 @@ function fmtDate(v:string){if(!v)return'-';const d=new Date(v);return Number.isN
 export default function ScholarshipDashboardClient(){
   const router=useRouter();
   const[data,setData]=useState<Data|null>(null);const[error,setError]=useState('');const[confirming,setConfirming]=useState(false);
-  async function load(){try{const r=await fetch('/api/scholarship/me',{cache:'no-store'});const d=await r.json();if(r.status===401){router.replace('/beasiswa/portal');return;}if(!r.ok)throw new Error(d.message);setData(d)}catch(e){setError(e instanceof Error?e.message:'Gagal memuat dashboard.')}}
+  async function load(){try{const r=await fetch('/api/scholarship/me',{cache:'no-store'});const d=await r.json();if(r.status===401){router.replace('/beasiswa/portal');return;}if(!r.ok)throw new Error(d.message);if(String(d?.user?.role||'').toLowerCase()==='admin'){router.replace('/admin');return;}setData(d)}catch(e){setError(e instanceof Error?e.message:'Gagal memuat dashboard.')}}
   useEffect(()=>{load()},[router]);
   async function logout(){await fetch('/api/scholarship/me',{method:'DELETE'});router.push('/beasiswa');router.refresh()}
   async function confirmAttendance(){setConfirming(true);setError('');try{const r=await fetch('/api/scholarship/attendance',{method:'POST'});const d=await r.json();if(!r.ok)throw new Error(d.message);await load()}catch(e){setError(e instanceof Error?e.message:'Konfirmasi gagal.')}finally{setConfirming(false)}}
   if(error)return <div className="container section"><div className="empty-state"><h2>Portal belum dapat dimuat</h2><p>{error}</p></div></div>;
   if(!data)return <div className="container section"><div className="skeleton hero-skeleton"/></div>;
-  if(data.user.role==='admin')return <div className="scholar-dashboard"><div className="container"><section className="application-callout"><div className="callout-icon">⚙</div><div><span className="pill">Akun Administrator</span><h2>Akses administrator tersedia di YAHN Admin Center.</h2><p>Kelola program beasiswa, pendaftar, wawancara, pemulihan akun, dukungan, dan Kakak Asuh dari satu pusat administrasi.</p><Link className="btn btn-white" href="/admin">Buka Admin Center →</Link></div></section></div></div>;
-
   const current=data.currentApplication||null;const latest=data.appData||null;const history=data.applications||[];const a=current||latest;const status=String(a?.status||'').toUpperCase();
   return <div className="scholar-dashboard scholarship28-dashboard"><div className="container">
     <div className="scholar-dash-head"><div><div className="eyebrow">Portal Beasiswa</div><h1>Halo, {data.user.name.split(' ')[0]} 👋</h1><p>{data.user.email}{data.account?.nim?` · ${data.account.nim}`:''}</p></div><button className="btn btn-light" onClick={logout}>Keluar</button></div>

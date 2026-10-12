@@ -23,8 +23,8 @@ export function PortalFooter({ mode }: { mode: PortalMode }) {
           <strong>{student ? 'Mahasiswa' : 'Sahabat YAHN'}</strong>
           {student ? <>
             <Link href="/beasiswa">Program Beasiswa</Link>
+            <Link href="/beasiswa#informasi-pendaftaran">Panduan</Link>
             <Link href="/beasiswa/portal">Masuk / Daftar</Link>
-            <Link href="/beasiswa/dashboard">Riwayat & Status</Link>
           </> : <>
             <Link href="/sahabat#cara-berbagi">Cara Berbagi</Link>
             <Link href="/donasi/bulanan">Dukungan Bulanan</Link>
