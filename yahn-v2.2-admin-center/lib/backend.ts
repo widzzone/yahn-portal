@@ -28,6 +28,7 @@ export async function callScholarshipBackend(action: string, payload: Record<str
   const text = await res.text();
   let data: any;
   try { data = JSON.parse(text); } catch { throw new Error('Respons Apps Script beasiswa tidak valid.'); }
-  if (data.status !== 'success') throw new Error(data.message || 'Permintaan beasiswa gagal.');
+  if (data.status !== 'success') { const err:any = new Error(data.message || 'Permintaan beasiswa gagal.'); Object.assign(err, data); throw err; }
   return data;
 }
+

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { callScholarshipBackend } from '@/lib/backend';
 import { readSessionToken } from '@/lib/session';
 
-const allowed=new Set(['adminUpdateCandidateStatus','adminSaveInterviewSchedule','adminFinalDecision']);
+const allowed=new Set(['adminUpdateCandidateStatus','adminSaveInterviewSchedule','adminFinalDecision','adminUpsertScholarshipProgram','adminResolveAccountRecovery']);
 export async function POST(request:Request){
   try{
     const store=await cookies();const session=readSessionToken(store.get('yahn_admin_session')?.value);
