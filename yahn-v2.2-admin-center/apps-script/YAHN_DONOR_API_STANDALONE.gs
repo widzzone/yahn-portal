@@ -1,5 +1,5 @@
 /**
- * YAHN DONOR API v2.11 - Standalone Google Apps Script backend.
+ * YAHN DONOR API v2.12 - Standalone Google Apps Script backend.
  * Backend untuk portal donor Vercel: transaksi, OTP login, dashboard live,
  * profil penerima publik, CRM, sponsorship, dan impact update.
  */
@@ -26,7 +26,7 @@ function setupYahnDonorApi() {
   }
 
   const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/' + spreadsheetId + '/edit';
-  console.log('=== YAHN DONOR API v2.11 READY ===');
+  console.log('=== YAHN DONOR API v2.12 READY ===');
   console.log('DONOR_SHEET_ID: ' + spreadsheetId);
   console.log('SPREADSHEET URL: ' + spreadsheetUrl);
   console.log('YAHN_API_SECRET: ' + secret);
@@ -35,7 +35,7 @@ function setupYahnDonorApi() {
 }
 
 function doGet() {
-  return yahnJson_({ status:'success', service:'YAHN Donor API', version:'2.11', timestamp:new Date().toISOString() });
+  return yahnJson_({ status:'success', service:'YAHN Donor API', version:'2.12', timestamp:new Date().toISOString() });
 }
 
 function doPost(e) {
@@ -53,11 +53,14 @@ function doPost(e) {
       case 'getDonorDashboard': return yahnJson_(getDonorDashboard_(p));
       case 'getPublicRecipients': return yahnJson_(getPublicRecipients_());
       case 'getPublicRecipient': return yahnJson_(getPublicRecipient_(p));
+      case 'getPublicTransparency': return yahnJson_(getPublicTransparency_());
       case 'getDonorAdminData': return yahnJson_(getDonorAdminData_());
       case 'adminUpdateDonationStatus': return yahnJson_(adminUpdateDonationStatus_(p));
       case 'adminUpdateSponsorshipStatus': return yahnJson_(adminUpdateSponsorshipStatus_(p));
       case 'adminUpsertRecipient': return yahnJson_(adminUpsertRecipient_(p));
       case 'adminUpsertImpact': return yahnJson_(adminUpsertImpact_(p));
+      case 'adminUpsertDisbursement': return yahnJson_(adminUpsertDisbursement_(p));
+      case 'adminUpsertPublicDocument': return yahnJson_(adminUpsertPublicDocument_(p));
       case 'adminSendRecurringReminder': return yahnJson_(adminSendRecurringReminder_(p));
       default: return yahnJson_({status:'error',message:'Unknown action'});
     }
@@ -158,6 +161,8 @@ function initializeDonorSheets_(ss){
   createSheetIfMissing_(ss,'Recipient_Public',['Recipient ID','Nama Publik','Program Studi','Semester','IPK','Jenis Kebutuhan','Target Dana','Dana Terkumpul','Cerita Singkat','Foto URL','Status Publikasi']);
   createSheetIfMissing_(ss,'CRM_Log',['CRM ID','Timestamp','Donor ID','Channel','Jenis Pesan','Status','Keterangan']);
   createSheetIfMissing_(ss,'Impact_Update',['Impact ID','Tanggal','Recipient ID','Judul','Isi','Status']);
+  createSheetIfMissing_(ss,'Disbursements',['Disbursement ID','Tanggal','Program','Recipient ID','Kategori','Nominal','Keterangan','Bukti URL','Status Publikasi']);
+  createSheetIfMissing_(ss,'Public_Documents',['Document ID','Tanggal','Judul','Jenis','Periode','URL','Status Publikasi','Keterangan']);
 }
 function createSheetIfMissing_(ss,name,headers){
   let sh=ss.getSheetByName(name);
@@ -217,6 +222,56 @@ function createId_(prefix){const stamp=Utilities.formatDate(new Date(),Session.g
 function yahnJson_(obj){return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);}
 
 
+// ===================== PUBLIC IMPACT & TRANSPARENCY v2.12 =====================
+function maskPublicName_(name,anonymous){
+  if(String(anonymous||'').toUpperCase()==='YA')return 'Sahabat YAHN';
+  const parts=clean_(name).split(/\s+/).filter(Boolean);
+  if(!parts.length)return 'Sahabat YAHN';
+  const first=parts[0];
+  const maskedFirst=first.length<=2?(first[0]||'S')+'*':first.slice(0,1)+'*'.repeat(Math.min(5,first.length-1));
+  if(parts.length===1)return maskedFirst;
+  return maskedFirst+' '+parts.slice(1).map(function(x){return (x[0]||'*')+'*';}).join(' ');
+}
+
+function getPublicTransparency_(){
+  const ss=getDonorSpreadsheet_();
+  const donations=sheetObjects_(ss.getSheetByName('Donations')).filter(function(x){return isVerified_(x.Status);});
+  const disbursements=sheetObjects_(ss.getSheetByName('Disbursements')).filter(function(x){return String(x['Status Publikasi']||'').toUpperCase()==='PUBLISHED';});
+  const impacts=sheetObjects_(ss.getSheetByName('Impact_Update')).filter(function(x){return String(x.Status||'').toUpperCase()==='PUBLISHED';});
+  const documents=sheetObjects_(ss.getSheetByName('Public_Documents')).filter(function(x){return String(x['Status Publikasi']||'').toUpperCase()==='PUBLISHED';});
+  const recipients=sheetObjects_(ss.getSheetByName('Recipient_Public')).filter(function(x){return String(x['Status Publikasi']||'').toUpperCase()==='PUBLISHED';});
+  const totalSupport=donations.reduce(function(sum,x){return sum+Number(x.Nominal||0);},0);
+  const totalDisbursed=disbursements.reduce(function(sum,x){return sum+Number(x.Nominal||0);},0);
+  const supporterMap={}; donations.forEach(function(x){const id=String(x['Donor ID']||x.Email||'');if(id)supporterMap[id]=true;});
+  const helpedMap={}; disbursements.forEach(function(x){const id=String(x['Recipient ID']||'');if(id)helpedMap[id]=true;});
+  const categoryMap={}; disbursements.forEach(function(x){const k=clean_(x.Kategori||'Lainnya')||'Lainnya';categoryMap[k]=(categoryMap[k]||0)+Number(x.Nominal||0);});
+  const recentContributions=donations.slice().sort(function(a,b){return new Date(b.Timestamp).getTime()-new Date(a.Timestamp).getTime();}).slice(0,10).map(function(x){return{name:maskPublicName_(x.Nama,x.Anonim),amount:Number(x.Nominal||0),date:dateIso_(x.Timestamp),method:String(x.Metode||'')};});
+  const publicDisbursements=disbursements.slice().sort(function(a,b){return new Date(b.Tanggal).getTime()-new Date(a.Tanggal).getTime();}).map(function(x){return{id:String(x['Disbursement ID']||''),date:dateIso_(x.Tanggal),program:String(x.Program||''),recipientId:String(x['Recipient ID']||''),category:String(x.Kategori||''),amount:Number(x.Nominal||0),description:String(x.Keterangan||''),proofUrl:String(x['Bukti URL']||'')};});
+  const publicImpacts=impacts.slice().sort(function(a,b){return new Date(b.Tanggal).getTime()-new Date(a.Tanggal).getTime();}).slice(0,8).map(function(x){return{id:String(x['Impact ID']||''),date:dateIso_(x.Tanggal),recipientId:String(x['Recipient ID']||''),title:String(x.Judul||''),body:String(x.Isi||'')};});
+  const publicDocs=documents.slice().sort(function(a,b){return new Date(b.Tanggal).getTime()-new Date(a.Tanggal).getTime();}).map(function(x){return{id:String(x['Document ID']||''),date:dateIso_(x.Tanggal),title:String(x.Judul||''),type:String(x.Jenis||''),period:String(x.Periode||''),url:String(x.URL||''),description:String(x.Keterangan||'')};});
+  return{status:'success',transparency:{summary:{totalSupport:totalSupport,totalDisbursed:totalDisbursed,availableBalance:Math.max(0,totalSupport-totalDisbursed),supporters:Object.keys(supporterMap).length,recipientsHelped:Object.keys(helpedMap).length,publishedRecipients:recipients.length},categories:Object.keys(categoryMap).map(function(k){return{category:k,amount:categoryMap[k]};}).sort(function(a,b){return b.amount-a.amount;}),recentContributions:recentContributions,disbursements:publicDisbursements,impacts:publicImpacts,documents:publicDocs,recipients:recipients.map(publicRecipient_)}};
+}
+
+function adminUpsertDisbursement_(d){
+  const id=clean_(d.disbursementId)||createId_('DIS'),date=d.date?new Date(d.date):new Date(),program=clean_(d.program||'Beasiswa YAHN'),recipientId=clean_(d.recipientId),category=clean_(d.category||'UKT'),amount=Number(d.amount||0),description=clean_(d.description),proofUrl=clean_(d.proofUrl),status=clean_(d.status||'DRAFT').toUpperCase();
+  if(!program||!category||!Number.isFinite(amount)||amount<=0)return{status:'error',message:'Program, kategori, dan nominal penyaluran wajib diisi.'};
+  if(['DRAFT','PUBLISHED','ARCHIVED'].indexOf(status)<0)return{status:'error',message:'Status publikasi penyaluran tidak valid.'};
+  const sh=getDonorSpreadsheet_().getSheetByName('Disbursements'),row=findRowByValue_(sh,1,id),values=[[id,date,program,recipientId,category,amount,description,proofUrl,status]];
+  if(row>1)sh.getRange(row,1,1,9).setValues(values);else sh.appendRow(values[0]);
+  return{status:'success',disbursementId:id,message:status==='PUBLISHED'?'Penyaluran dipublikasikan ke halaman transparansi.':'Penyaluran berhasil disimpan.'};
+}
+
+function adminUpsertPublicDocument_(d){
+  const id=clean_(d.documentId)||createId_('DOC'),date=d.date?new Date(d.date):new Date(),title=clean_(d.title),type=clean_(d.type||'Laporan'),period=clean_(d.period),url=clean_(d.url),status=clean_(d.status||'DRAFT').toUpperCase(),description=clean_(d.description);
+  if(!title||!url)return{status:'error',message:'Judul dan URL dokumen wajib diisi.'};
+  if(!/^https?:\/\//i.test(url))return{status:'error',message:'URL dokumen harus berupa tautan http/https.'};
+  if(['DRAFT','PUBLISHED','ARCHIVED'].indexOf(status)<0)return{status:'error',message:'Status dokumen tidak valid.'};
+  const sh=getDonorSpreadsheet_().getSheetByName('Public_Documents'),row=findRowByValue_(sh,1,id),values=[[id,date,title,type,period,url,status,description]];
+  if(row>1)sh.getRange(row,1,1,8).setValues(values);else sh.appendRow(values[0]);
+  return{status:'success',documentId:id,message:status==='PUBLISHED'?'Dokumen dipublikasikan ke halaman transparansi.':'Dokumen publik berhasil disimpan.'};
+}
+
+
 // ===================== ADMIN CENTER v2.2 =====================
 function getDonorAdminData_(){
   const ss=getDonorSpreadsheet_();
@@ -226,13 +281,15 @@ function getDonorAdminData_(){
   const sponsorships=sheetObjects_(ss.getSheetByName('Sponsorships'));
   const recipients=sheetObjects_(ss.getSheetByName('Recipient_Public'));
   const impacts=sheetObjects_(ss.getSheetByName('Impact_Update'));
+  const disbursements=sheetObjects_(ss.getSheetByName('Disbursements'));
+  const publicDocuments=sheetObjects_(ss.getSheetByName('Public_Documents'));
   const verified=donations.filter(function(x){return isVerified_(x.Status);});
   const pending=donations.filter(function(x){return String(x.Status||'').toUpperCase()==='MENUNGGU VERIFIKASI';});
   const totalVerified=verified.reduce(function(s,x){return s+Number(x.Nominal||0);},0);
   const totalPending=pending.reduce(function(s,x){return s+Number(x.Nominal||0);},0);
   return{status:'success',admin:{
-    summary:{donors:donors.length,activeDonors:donors.filter(function(x){return String(x.Status||'').toUpperCase()==='AKTIF';}).length,totalVerified:totalVerified,totalPending:totalPending,pendingDonations:pending.length,recurringActive:recurring.filter(function(x){return String(x.Status||'').toUpperCase()==='AKTIF';}).length,sponsorshipActive:sponsorships.filter(function(x){return ['AKTIF','ACTIVE','TERVERIFIKASI'].indexOf(String(x.Status||'').toUpperCase())>=0;}).length,publishedRecipients:recipients.filter(function(x){return String(x['Status Publikasi']||'').toUpperCase()==='PUBLISHED';}).length},
-    donors:donors,donations:donations,recurring:recurring,sponsorships:sponsorships,recipients:recipients,impacts:impacts
+    summary:{donors:donors.length,activeDonors:donors.filter(function(x){return String(x.Status||'').toUpperCase()==='AKTIF';}).length,totalVerified:totalVerified,totalPending:totalPending,pendingDonations:pending.length,recurringActive:recurring.filter(function(x){return String(x.Status||'').toUpperCase()==='AKTIF';}).length,sponsorshipActive:sponsorships.filter(function(x){return ['AKTIF','ACTIVE','TERVERIFIKASI'].indexOf(String(x.Status||'').toUpperCase())>=0;}).length,publishedRecipients:recipients.filter(function(x){return String(x['Status Publikasi']||'').toUpperCase()==='PUBLISHED';}).length,totalDisbursed:disbursements.filter(function(x){return String(x['Status Publikasi']||'').toUpperCase()==='PUBLISHED';}).reduce(function(s,x){return s+Number(x.Nominal||0);},0)},
+    donors:donors,donations:donations,recurring:recurring,sponsorships:sponsorships,recipients:recipients,impacts:impacts,disbursements:disbursements,publicDocuments:publicDocuments
   }};
 }
 

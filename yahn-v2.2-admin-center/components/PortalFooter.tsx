@@ -29,6 +29,7 @@ export function PortalFooter({ mode }: { mode: PortalMode }) {
             <Link href="/sahabat#cara-berbagi">Cara Berbagi</Link>
             <Link href="/donasi/bulanan">Dukungan Bulanan</Link>
             <Link href="/kakak-asuh">Kakak Asuh</Link>
+            <Link href="/dampak">Dampak & Transparansi</Link>
           </>}
         </div>
         <div className="footer-links">

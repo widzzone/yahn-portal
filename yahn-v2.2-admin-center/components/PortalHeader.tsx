@@ -17,6 +17,7 @@ const supporterLinks = [
   { href: '/sahabat#cara-berbagi', label: 'Cara Berbagi' },
   { href: '/donasi/bulanan', label: 'Dukungan Bulanan' },
   { href: '/kakak-asuh', label: 'Kakak Asuh' },
+  { href: '/dampak', label: 'Dampak & Transparansi' },
 ];
 
 export function PortalHeader({ mode }: { mode: PortalMode }) {
