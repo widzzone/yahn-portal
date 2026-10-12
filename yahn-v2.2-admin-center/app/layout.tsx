@@ -3,7 +3,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'YAHN | Pendidikan Bertumbuh Bersama',
-  description: 'Portal terpadu Yayasan Andi Hakim Nasoetion untuk beasiswa, donasi, dan program Kakak Asuh.',
+  description: 'Portal Yayasan Andi Hakim Nasoetion dengan ruang khusus Mahasiswa, Sahabat YAHN, dan Admin Center.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

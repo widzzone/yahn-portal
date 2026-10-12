@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
+import { PortalHeader } from '@/components/PortalHeader';
+import { PortalFooter } from '@/components/PortalFooter';
 
 const rupiah = (v:number) => new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(v||0);
 
@@ -10,7 +10,7 @@ export default async function ThankYouPage({searchParams}:{searchParams:Promise<
   const amount = Math.max(0, Number(q.amount || 0) || 0);
   const method = q.method || '-';
   return <>
-    <SiteHeader/>
+    <PortalHeader mode="supporter" />
     <main className="thank25-page">
       <div className="thank25-orb thank25-a"/><div className="thank25-orb thank25-b"/>
       <section className="container thank25-shell">
@@ -38,6 +38,6 @@ export default async function ThankYouPage({searchParams}:{searchParams:Promise<
         </div>
       </section>
     </main>
-    <SiteFooter/>
+    <PortalFooter mode="supporter" />
   </>;
 }

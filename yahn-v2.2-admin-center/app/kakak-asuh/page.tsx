@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
+import { PortalHeader } from '@/components/PortalHeader';
+import { PortalFooter } from '@/components/PortalFooter';
 import { callDonorBackend } from '@/lib/backend';
 export const dynamic='force-dynamic';
 const rupiah=(v:number)=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(v||0);
@@ -9,7 +9,7 @@ export default async function KakakAsuhPage(){
   let recipients:any[]=[];let error='';
   try{const d=await callDonorBackend('getPublicRecipients');recipients=d.recipients||[]}catch(e){error=e instanceof Error?e.message:'Gagal memuat data.'}
   return <>
-    <SiteHeader/>
+    <PortalHeader mode="supporter" />
     <main className="foster25-page">
       <section className="foster25-hero">
         <div className="container foster25-hero-grid">
@@ -29,6 +29,6 @@ export default async function KakakAsuhPage(){
         </article>})}</div>}
       </div></section>
     </main>
-    <SiteFooter/>
+    <PortalFooter mode="supporter" />
   </>;
 }

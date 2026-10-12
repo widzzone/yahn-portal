@@ -30,7 +30,7 @@ export default function DonationForm({
   const bank = process.env.NEXT_PUBLIC_DONATION_BANK || 'Bank BRI';
   const account = process.env.NEXT_PUBLIC_DONATION_ACCOUNT || '038701004655566';
   const accountName = process.env.NEXT_PUBLIC_DONATION_ACCOUNT_NAME || 'Beasiswa AHN';
-  const qris = 'https://www.image2url.com/r2/default/images/1791734981716-0ce8fd4f-43e7-43e5-8838-9aa7fe6c6a09.jpeg';
+  const qris = '/qris-yahn.jpeg';
 
   const finalAmount = useMemo(() => (custom ? Number(custom) || 0 : amount), [custom, amount]);
 
@@ -153,16 +153,16 @@ export default function DonationForm({
           {method === 'QRIS' ? (
             <div className="donation24-pay-panel donation24-qris-panel premium-pay-card">
               <div className="qris donation24-qris-box">
-                {qris ? <img src={qris} alt="QRIS Beasiswa AHN" /> : <span>QRIS belum dikonfigurasi.</span>}
+                {qris ? <img src={qris} alt="QRIS Yayasan Andi Hakim Nasoetion" /> : <span>QRIS belum dikonfigurasi.</span>}
               </div>
               <div className="donation24-pay-copy">
                 <span className="pill">QRIS resmi</span>
-                <h3>Scan QRIS Beasiswa AHN</h3>
+                <h3>Scan QRIS Yayasan Andi Hakim Nasoetion</h3>
                 <p>
                   Gunakan aplikasi bank atau dompet digital Anda, lalu masukkan nominal{' '}
                   <b>{fmt(finalAmount)}</b>.
                 </p>
-                <div className="payment-note-inline">Atas nama: <strong>Beasiswa AHN</strong></div>
+                <div className="payment-note-inline">Atas nama: <strong>Yayasan Andi Hakim Nasoetion</strong></div>
               </div>
             </div>
           ) : (

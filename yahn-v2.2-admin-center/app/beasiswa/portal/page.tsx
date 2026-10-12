@@ -1,11 +1,11 @@
-import { SiteHeader } from '@/components/SiteHeader';
+import { PortalHeader } from '@/components/PortalHeader';
 import ScholarshipAccess from './ScholarshipAccess';
 import ScholarshipProgramGuide from './ScholarshipProgramGuide';
 
 export default function ScholarshipPortalPage() {
   return (
     <>
-      <SiteHeader />
+      <PortalHeader mode="student" />
       <main className="scholarship-portal-page scholarship271-page">
         <div className="scholarship-portal-shell scholarship271-shell">
           <section className="scholarship-brand-panel scholarship271-brand-panel">

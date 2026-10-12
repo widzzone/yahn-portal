@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { DonorTypeCards } from '@/components/DonorTypeCards';
 import { DonationQuickStart } from '@/components/DonationQuickStart';
-import { SiteFooter } from '@/components/SiteFooter';
-import { SiteHeader } from '@/components/SiteHeader';
+import { PortalFooter } from '@/components/PortalFooter';
+import { PortalHeader } from '@/components/PortalHeader';
 import { callDonorBackend } from '@/lib/backend';
 
 function rupiah(v:number){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(v||0)}
@@ -10,7 +10,7 @@ function rupiah(v:number){return new Intl.NumberFormat('id-ID',{style:'currency'
 export default async function DonasiPage() {
   let recipients:any[]=[];
   try{const d=await callDonorBackend('getPublicRecipients');recipients=(d.recipients||[]).slice(0,3)}catch{}
-  return <><SiteHeader/><main className="donation23-page compact26-page">
+  return <><PortalHeader mode="supporter" /><main className="donation23-page compact26-page">
     <section className="donation23-hero compact26-hero">
       <div className="donation23-orb donation23-orb-a"/><div className="donation23-orb donation23-orb-b"/>
       <div className="container donation23-hero-grid compact26-grid">
@@ -34,5 +34,5 @@ export default async function DonasiPage() {
       <div className="donation23-recipient-grid">{recipients.map((s:any)=>{const pct=s.target?Math.min(100,Math.round((Number(s.funded||0)/Number(s.target||1))*100)):0;return <Link href={`/kakak-asuh/${encodeURIComponent(s.recipientId)}`} className="donation23-recipient-card" key={s.recipientId}><div className="donation23-recipient-top"><div className="avatar">{String(s.name||'Y').split(' ').map((x:string)=>x[0]).join('').slice(0,2).toUpperCase()}</div><span>{s.need||'Dukungan Pendidikan'}</span></div><h3>{s.name}</h3><p>{s.program} · Semester {s.semester}</p><div className="donation23-progress"><i style={{width:`${pct}%`}}/></div><div className="donation23-funded"><span>{rupiah(Number(s.funded||0))} terkumpul</span><b>{pct}%</b></div><small>Lihat perjalanan →</small></Link>})}</div>
       <div className="donation23-center-action"><Link href="/kakak-asuh" className="btn btn-light">Lihat semua calon adik asuh →</Link></div>
     </div></section>}
-  </main><SiteFooter/></>;
+  </main><PortalFooter mode="supporter" /></>;
 }

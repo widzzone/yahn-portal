@@ -1,5 +1,5 @@
-import { SiteFooter } from '@/components/SiteFooter';
-import { SiteHeader } from '@/components/SiteHeader';
+import { PortalFooter } from '@/components/PortalFooter';
+import { PortalHeader } from '@/components/PortalHeader';
 import RecurringDonationForm from './RecurringDonationForm';
 
 export default async function MonthlyDonationPage({ searchParams }: { searchParams: Promise<{ amount?: string; day?: string }> }) {
@@ -9,7 +9,7 @@ export default async function MonthlyDonationPage({ searchParams }: { searchPara
 
   return (
     <>
-      <SiteHeader />
+      <PortalHeader mode="supporter" />
       <main className="donation24-page recurring26-page">
         <section className="donation24-subhero recurring26-subhero">
           <div className="container donation24-subhero-row">
@@ -35,7 +35,7 @@ export default async function MonthlyDonationPage({ searchParams }: { searchPara
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <PortalFooter mode="supporter" />
     </>
   );
 }

@@ -31,14 +31,14 @@ export default function DonorDashboardClient(){
   const firstName=data.donor.name.split(' ')[0];
   return <div className="donor25-dashboard donor27-dashboard">
     <aside className="donor25-side donor27-side">
-      <Link href="/" className="donor25-side-brand donor27-side-brand"><img src="/logo-yahn.png" alt="YAHN"/><div><b>Sahabat YAHN</b><span>Portal pribadi</span></div></Link>
+      <Link href="/sahabat" className="donor25-side-brand donor27-side-brand"><img src="/logo-yahn.png" alt="YAHN"/><div><b>Sahabat YAHN</b><span>Portal pribadi</span></div></Link>
       <nav>
         <button className={tab==='overview'?'active':''} onClick={()=>setTab('overview')}>⌂ Ringkasan</button>
         <button className={tab==='activity'?'active':''} onClick={()=>setTab('activity')}>↗ Riwayat</button>
         <button className={tab==='foster'?'active':''} onClick={()=>setTab('foster')}>♡ Kakak Asuh</button>
         <button className={tab==='impact'?'active':''} onClick={()=>setTab('impact')}>✦ Dampak</button>
       </nav>
-      <div className="donor25-side-actions"><Link href="/donasi/sekarang">＋ Berbagi lagi</Link><Link href="/">Website YAHN</Link></div>
+      <div className="donor25-side-actions"><Link href="/donasi/sekarang">＋ Berbagi lagi</Link><Link href="/sahabat">Beranda Sahabat</Link><Link href="/">Ganti Portal</Link></div>
       <div className="donor25-side-profile"><div className="avatar avatar-small">{data.donor.name.split(' ').map(x=>x[0]).join('').slice(0,2).toUpperCase()}</div><div><b>{data.donor.name}</b><span>{data.donor.email}</span></div></div>
       <button className="donor25-logout" onClick={logout}>Keluar</button>
     </aside>

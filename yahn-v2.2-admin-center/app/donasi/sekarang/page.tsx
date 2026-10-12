@@ -1,5 +1,5 @@
-import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
+import { PortalHeader } from '@/components/PortalHeader';
+import { PortalFooter } from '@/components/PortalFooter';
 import DonationForm from './DonationForm';
 
 export default async function DirectDonationPage({
@@ -13,7 +13,7 @@ export default async function DirectDonationPage({
 
   return (
     <>
-      <SiteHeader />
+      <PortalHeader mode="supporter" />
       <main className="donation23-page donation24-page">
         <section className="donation24-subhero">
           <div className="container donation24-subhero-row">
@@ -39,7 +39,7 @@ export default async function DirectDonationPage({
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <PortalFooter mode="supporter" />
     </>
   );
 }

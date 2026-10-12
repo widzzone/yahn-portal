@@ -1,9 +1,9 @@
-import { SiteHeader } from '@/components/SiteHeader';
+import { PortalHeader } from '@/components/PortalHeader';
 import DonorLogin from './DonorLogin';
 
 export default function DonorLoginPage(){
   return <>
-    <SiteHeader/>
+    <PortalHeader mode="supporter" />
     <main className="donor25-login-page compact-support-page">
       <div className="container donor25-login-shell compact-support-shell">
         <section className="donor25-login-copy compact-support-copy">

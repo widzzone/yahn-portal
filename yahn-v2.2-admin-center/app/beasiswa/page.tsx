@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { SiteHeader } from '@/components/SiteHeader';
-import { SiteFooter } from '@/components/SiteFooter';
+import { PortalHeader } from '@/components/PortalHeader';
+import { PortalFooter } from '@/components/PortalFooter';
 import { callScholarshipBackend } from '@/lib/backend';
 
 export const dynamic='force-dynamic';
@@ -15,7 +15,7 @@ export default async function BeasiswaPage() {
   const semesterText=current?.semesters?String(current.semesters).split(',').map((x:string)=>x.trim()).filter(Boolean).join(' & '):'4 & 6';
   return (
     <>
-      <SiteHeader />
+      <PortalHeader mode="student" />
       <main className="beasiswa271-page">
         <section className="page-hero scholarship-hero beasiswa271-hero">
           <div className="container beasiswa271-hero-grid">
@@ -77,7 +77,7 @@ export default async function BeasiswaPage() {
           </div>
         </section>
       </main>
-      <SiteFooter />
+      <PortalFooter mode="student" />
     </>
   );
 }
