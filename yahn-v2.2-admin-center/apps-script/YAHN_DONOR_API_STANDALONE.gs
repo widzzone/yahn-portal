@@ -1,5 +1,5 @@
 /**
- * YAHN DONOR API v2.2 - Standalone Google Apps Script backend.
+ * YAHN DONOR API v2.11 - Standalone Google Apps Script backend.
  * Backend untuk portal donor Vercel: transaksi, OTP login, dashboard live,
  * profil penerima publik, CRM, sponsorship, dan impact update.
  */
@@ -17,6 +17,7 @@ function setupYahnDonorApi() {
     ss = SpreadsheetApp.openById(spreadsheetId);
   }
   initializeDonorSheets_(ss);
+  const proofFolder = getOrCreateDonationProofFolder_();
 
   let secret = props.getProperty('YAHN_API_SECRET');
   if (!secret) {
@@ -25,15 +26,16 @@ function setupYahnDonorApi() {
   }
 
   const spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/' + spreadsheetId + '/edit';
-  console.log('=== YAHN DONOR API v2.2 READY ===');
+  console.log('=== YAHN DONOR API v2.11 READY ===');
   console.log('DONOR_SHEET_ID: ' + spreadsheetId);
   console.log('SPREADSHEET URL: ' + spreadsheetUrl);
   console.log('YAHN_API_SECRET: ' + secret);
-  return { status:'success', spreadsheetId:spreadsheetId, spreadsheetUrl:spreadsheetUrl, secret:secret };
+  console.log('BUKTI PEMBAYARAN FOLDER: ' + proofFolder.getUrl());
+  return { status:'success', spreadsheetId:spreadsheetId, spreadsheetUrl:spreadsheetUrl, proofFolderUrl:proofFolder.getUrl(), secret:secret };
 }
 
 function doGet() {
-  return yahnJson_({ status:'success', service:'YAHN Donor API', version:'2.2', timestamp:new Date().toISOString() });
+  return yahnJson_({ status:'success', service:'YAHN Donor API', version:'2.11', timestamp:new Date().toISOString() });
 }
 
 function doPost(e) {
@@ -68,11 +70,20 @@ function submitDonation_(d) {
   const name=clean_(d.name), email=clean_(d.email).toLowerCase(), whatsapp=clean_(d.whatsapp);
   const method=clean_(d.method||'QRIS').toUpperCase(), amount=Number(d.amount||0), anonymous=d.anonymous===true;
   if (!name || !isValidEmail_(email) || !Number.isFinite(amount) || amount<10000) return {status:'error',message:'Nama, email valid, dan nominal minimal Rp10.000 wajib diisi.'};
+  if (method==='TRANSFER BANK' && !(d.proof && d.proof.base64)) return {status:'error',message:'Bukti pembayaran wajib untuk transfer bank.'};
+
   const ss=getDonorSpreadsheet_(), donors=ss.getSheetByName('Donors'), donations=ss.getSheetByName('Donations');
   const donorId=upsertDonor_(donors,{name,email,whatsapp,donorType:'DONASI SEKALI'});
   const donationId=createId_('DON');
-  donations.appendRow([donationId,new Date(),donorId,name,email,whatsapp,amount,method,anonymous?'YA':'TIDAK','MENUNGGU VERIFIKASI','VERCEL','']);
-  return {status:'success',donationId,donorId,message:'Konfirmasi donasi berhasil dicatat dan menunggu verifikasi YAHN.'};
+  let proofInfo={url:'',fileId:'',fileName:'',mimeType:'',uploadedAt:''};
+  if(d.proof && d.proof.base64) proofInfo=saveDonationProof_(d.proof,donationId);
+
+  donations.appendRow([
+    donationId,new Date(),donorId,name,email,whatsapp,amount,method,
+    anonymous?'YA':'TIDAK','MENUNGGU VERIFIKASI','PORTAL YAHN','',
+    proofInfo.url,proofInfo.fileId,proofInfo.fileName,proofInfo.mimeType,proofInfo.uploadedAt
+  ]);
+  return {status:'success',donationId,donorId,proofUrl:proofInfo.url,message:'Konfirmasi donasi berhasil dicatat dan menunggu verifikasi YAHN.'};
 }
 
 function registerRecurringDonor_(d) {
@@ -141,14 +152,55 @@ function publicRecipient_(r){return{recipientId:String(r['Recipient ID']),name:S
 
 function initializeDonorSheets_(ss){
   createSheetIfMissing_(ss,'Donors',['Donor ID','Created At','Nama','Email','WhatsApp','Tipe Donatur','Status','Last Activity']);
-  createSheetIfMissing_(ss,'Donations',['Donation ID','Timestamp','Donor ID','Nama','Email','WhatsApp','Nominal','Metode','Anonim','Status','Sumber','Catatan Admin']);
+  createSheetIfMissing_(ss,'Donations',['Donation ID','Timestamp','Donor ID','Nama','Email','WhatsApp','Nominal','Metode','Anonim','Status','Sumber','Catatan Admin','Bukti URL','Bukti File ID','Bukti Nama File','Bukti MIME','Bukti Uploaded At']);
   createSheetIfMissing_(ss,'Recurring_Donors',['Recurring ID','Created At','Donor ID','Nama','Email','WhatsApp','Nominal Bulanan','Tanggal Reminder','Status','Last Reminder','Last Payment']);
   createSheetIfMissing_(ss,'Sponsorships',['Sponsorship ID','Created At','Donor ID','Nama Donatur','Email','Recipient ID','Jenis Dukungan','Nominal','Periode','Status','Catatan Admin']);
   createSheetIfMissing_(ss,'Recipient_Public',['Recipient ID','Nama Publik','Program Studi','Semester','IPK','Jenis Kebutuhan','Target Dana','Dana Terkumpul','Cerita Singkat','Foto URL','Status Publikasi']);
   createSheetIfMissing_(ss,'CRM_Log',['CRM ID','Timestamp','Donor ID','Channel','Jenis Pesan','Status','Keterangan']);
   createSheetIfMissing_(ss,'Impact_Update',['Impact ID','Tanggal','Recipient ID','Judul','Isi','Status']);
 }
-function createSheetIfMissing_(ss,name,headers){let sh=ss.getSheetByName(name);if(!sh){sh=ss.insertSheet(name);sh.getRange(1,1,1,headers.length).setValues([headers]);sh.setFrozenRows(1);sh.getRange(1,1,1,headers.length).setFontWeight('bold').setBackground('#0f766e').setFontColor('#ffffff');sh.autoResizeColumns(1,headers.length);}return sh;}
+function createSheetIfMissing_(ss,name,headers){
+  let sh=ss.getSheetByName(name);
+  if(!sh){
+    sh=ss.insertSheet(name);
+    sh.getRange(1,1,1,headers.length).setValues([headers]);
+    sh.setFrozenRows(1);
+    sh.getRange(1,1,1,headers.length).setFontWeight('bold').setBackground('#0f766e').setFontColor('#ffffff');
+    sh.autoResizeColumns(1,headers.length);
+  } else {
+    ensureSheetHeaders_(sh,headers);
+  }
+  return sh;
+}
+function ensureSheetHeaders_(sh,headers){
+  const last=Math.max(1,sh.getLastColumn());
+  const existing=sh.getRange(1,1,1,last).getValues()[0].map(String);
+  let changed=false;
+  headers.forEach(function(h){if(existing.indexOf(h)<0){existing.push(h);changed=true;}});
+  if(changed){sh.getRange(1,1,1,existing.length).setValues([existing]);sh.getRange(1,1,1,existing.length).setFontWeight('bold').setBackground('#0f766e').setFontColor('#ffffff');}
+}
+function getOrCreateDonationProofFolder_(){
+  const props=PropertiesService.getScriptProperties();
+  const existing=props.getProperty('DONOR_PROOF_FOLDER_ID');
+  if(existing){try{return DriveApp.getFolderById(existing);}catch(e){}}
+  const folder=DriveApp.createFolder('YAHN - Bukti Pembayaran');
+  props.setProperty('DONOR_PROOF_FOLDER_ID',folder.getId());
+  return folder;
+}
+function saveDonationProof_(proof,donationId){
+  const mime=clean_(proof.mimeType).toLowerCase();
+  const allowed=['image/jpeg','image/png','image/webp','application/pdf'];
+  if(allowed.indexOf(mime)<0)throw new Error('Format bukti pembayaran tidak didukung.');
+  const bytes=Utilities.base64Decode(String(proof.base64||''));
+  if(!bytes.length)throw new Error('Bukti pembayaran kosong.');
+  if(bytes.length>3*1024*1024)throw new Error('Ukuran bukti pembayaran maksimal 3 MB.');
+  const ext=mime==='image/png'?'.png':mime==='image/webp'?'.webp':mime==='application/pdf'?'.pdf':'.jpg';
+  const original=clean_(proof.name).replace(/[^a-zA-Z0-9._-]/g,'_').slice(-80);
+  const safeName=donationId+'_'+Utilities.formatDate(new Date(),Session.getScriptTimeZone()||'Asia/Jakarta','yyyyMMdd_HHmmss')+(original?('_'+original):ext);
+  const blob=Utilities.newBlob(bytes,mime,safeName);
+  const file=getOrCreateDonationProofFolder_().createFile(blob);
+  return{url:file.getUrl(),fileId:file.getId(),fileName:file.getName(),mimeType:mime,uploadedAt:new Date()};
+}
 function getDonorSpreadsheet_(){const id=PropertiesService.getScriptProperties().getProperty('DONOR_SHEET_ID');if(!id)throw new Error('DONOR_SHEET_ID belum tersedia. Jalankan setupYahnDonorApi() terlebih dahulu.');return SpreadsheetApp.openById(id);}
 function upsertDonor_(sheet,d){const values=sheet.getDataRange().getValues();for(let i=1;i<values.length;i++){if(String(values[i][3]||'').trim().toLowerCase()===d.email){sheet.getRange(i+1,3).setValue(d.name);sheet.getRange(i+1,5).setValue(d.whatsapp||values[i][4]);const existingType=String(values[i][5]||'');if(existingType.indexOf(d.donorType)<0)sheet.getRange(i+1,6).setValue(existingType?existingType+' + '+d.donorType:d.donorType);sheet.getRange(i+1,8).setValue(new Date());return String(values[i][0]);}}const donorId=createId_('DNR');sheet.appendRow([donorId,new Date(),d.name,d.email,d.whatsapp,d.donorType,'AKTIF',new Date()]);return donorId;}
 function findRowByValue_(sheet,column,value){const last=sheet.getLastRow();if(last<2)return-1;const vals=sheet.getRange(2,column,last-1,1).getValues();const needle=String(value).trim().toLowerCase();for(let i=0;i<vals.length;i++)if(String(vals[i][0]||'').trim().toLowerCase()===needle)return i+2;return-1;}

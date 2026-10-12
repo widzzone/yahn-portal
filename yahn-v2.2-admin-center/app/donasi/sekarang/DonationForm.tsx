@@ -1,15 +1,35 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const presets = [50000, 100000, 250000, 500000, 1000000];
+const MAX_PROOF_SIZE = 3 * 1024 * 1024;
+const ALLOWED_PROOF_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 const fmt = (v: number) =>
   new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     maximumFractionDigits: 0,
   }).format(v || 0);
+
+function fileToBase64(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || '');
+      const comma = result.indexOf(',');
+      resolve(comma >= 0 ? result.slice(comma + 1) : result);
+    };
+    reader.onerror = () => reject(new Error('Bukti pembayaran gagal dibaca.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function fileSize(value: number) {
+  if (value < 1024 * 1024) return `${Math.max(1, Math.round(value / 1024))} KB`;
+  return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 export default function DonationForm({
   initialAmount = 100000,
@@ -24,15 +44,16 @@ export default function DonationForm({
   const [method, setMethod] = useState<'QRIS' | 'Transfer Bank'>(initialMethod);
   const [copied, setCopied] = useState(false);
   const [status, setStatus] = useState('');
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [proof, setProof] = useState<File | null>(null);
 
   const bank = process.env.NEXT_PUBLIC_DONATION_BANK || 'Bank BRI';
   const account = process.env.NEXT_PUBLIC_DONATION_ACCOUNT || '038701004655566';
-  const accountName = process.env.NEXT_PUBLIC_DONATION_ACCOUNT_NAME || 'Beasiswa AHN';
+  const accountName = process.env.NEXT_PUBLIC_DONATION_ACCOUNT_NAME || 'Yayasan Andi Hakim Nasoetion';
   const qris = '/qris-yahn.jpeg';
 
   const finalAmount = useMemo(() => (custom ? Number(custom) || 0 : amount), [custom, amount]);
+  const proofRequired = method === 'Transfer Bank';
 
   async function copyAccount() {
     try {
@@ -42,14 +63,49 @@ export default function DonationForm({
     } catch {}
   }
 
+  function onProofChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] || null;
+    setStatus('');
+    if (!file) {
+      setProof(null);
+      return;
+    }
+    if (!ALLOWED_PROOF_TYPES.includes(file.type)) {
+      event.target.value = '';
+      setProof(null);
+      setStatus('Format bukti pembayaran harus JPG, PNG, WEBP, atau PDF.');
+      return;
+    }
+    if (file.size > MAX_PROOF_SIZE) {
+      event.target.value = '';
+      setProof(null);
+      setStatus('Ukuran bukti pembayaran maksimal 3 MB.');
+      return;
+    }
+    setProof(file);
+  }
+
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setLoading(true);
     setStatus('');
-    setSuccess(false);
+    if (proofRequired && !proof) {
+      setStatus('Untuk transfer bank, mohon upload bukti pembayaran terlebih dahulu.');
+      return;
+    }
+
+    setLoading(true);
     const form = new FormData(e.currentTarget);
 
     try {
+      const proofPayload = proof
+        ? {
+            name: proof.name,
+            mimeType: proof.type,
+            size: proof.size,
+            base64: await fileToBase64(proof),
+          }
+        : undefined;
+
       const r = await fetch('/api/donations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -60,19 +116,21 @@ export default function DonationForm({
           amount: finalAmount,
           method,
           anonymous: form.get('anonymous') === 'on',
+          proof: proofPayload,
         }),
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.message || 'Gagal menyimpan.');
-      setSuccess(true);
+
       const qs = new URLSearchParams({
         donationId: String(d.donationId || ''),
         amount: String(finalAmount),
         method,
+        proof: d.proofUrl ? 'uploaded' : 'none',
       });
       router.push(`/donasi/terima-kasih?${qs.toString()}`);
-    } catch (e) {
-      setStatus(e instanceof Error ? e.message : 'Terjadi kesalahan.');
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : 'Terjadi kesalahan.');
     } finally {
       setLoading(false);
     }
@@ -85,8 +143,8 @@ export default function DonationForm({
           <span className="pill">Tanpa akun</span>
           <h2>Terima kasih sudah memilih ikut menjaga masa depan pendidikan.</h2>
           <p>
-            Cukup tentukan nominal, pilih metode pembayaran, lalu kirim data singkat agar transaksi
-            Anda mudah diverifikasi.
+            Tentukan nominal, lakukan pembayaran, lalu kirim konfirmasi singkat. Bukti pembayaran
+            membantu tim YAHN melakukan verifikasi dengan lebih cepat.
           </p>
         </div>
 
@@ -132,7 +190,7 @@ export default function DonationForm({
           <div className="donation24-step-head">
             <b>2</b>
             <div>
-              <strong>Pilih cara pembayaran</strong>
+              <strong>Lakukan pembayaran</strong>
               <span>Gunakan kanal pembayaran resmi YAHN.</span>
             </div>
           </div>
@@ -153,7 +211,7 @@ export default function DonationForm({
           {method === 'QRIS' ? (
             <div className="donation24-pay-panel donation24-qris-panel premium-pay-card">
               <div className="qris donation24-qris-box">
-                {qris ? <img src={qris} alt="QRIS Yayasan Andi Hakim Nasoetion" /> : <span>QRIS belum dikonfigurasi.</span>}
+                <img src={qris} alt="QRIS Yayasan Andi Hakim Nasoetion" />
               </div>
               <div className="donation24-pay-copy">
                 <span className="pill">QRIS resmi</span>
@@ -193,8 +251,8 @@ export default function DonationForm({
           <div className="donation24-step-head">
             <b>3</b>
             <div>
-              <strong>Kirim konfirmasi</strong>
-              <span>Data ini dipakai untuk pencatatan dan verifikasi transaksi.</span>
+              <strong>Konfirmasi pembayaran</strong>
+              <span>Lengkapi data singkat dan lampirkan bukti pembayaran.</span>
             </div>
           </div>
 
@@ -216,6 +274,36 @@ export default function DonationForm({
             <input className="input" name="whatsapp" placeholder="08xxxxxxxxxx" />
           </div>
 
+          <div className={`proof11-upload ${proof ? 'has-file' : ''}`}>
+            <div className="proof11-upload-head">
+              <div>
+                <span className="proof11-icon">↥</span>
+                <div>
+                  <strong>Upload bukti pembayaran</strong>
+                  <p>{proofRequired ? 'Wajib untuk transfer bank.' : 'Opsional untuk QRIS, tetapi membantu mempercepat verifikasi.'}</p>
+                </div>
+              </div>
+              <span className={`proof11-badge ${proofRequired ? 'required' : ''}`}>{proofRequired ? 'Wajib' : 'Opsional'}</span>
+            </div>
+
+            {!proof ? (
+              <label className="proof11-picker">
+                <input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={onProofChange} />
+                <span>Pilih JPG, PNG, WEBP, atau PDF</span>
+                <small>Maksimal 3 MB</small>
+              </label>
+            ) : (
+              <div className="proof11-file">
+                <div className="proof11-file-icon">✓</div>
+                <div>
+                  <strong>{proof.name}</strong>
+                  <span>{fileSize(proof.size)}</span>
+                </div>
+                <button type="button" onClick={() => setProof(null)}>Hapus</button>
+              </div>
+            )}
+          </div>
+
           <label className="check-single donation24-check">
             <input type="checkbox" name="anonymous" />
             <span>Saya ingin nama saya ditampilkan sebagai anonim pada laporan publik.</span>
@@ -223,13 +311,16 @@ export default function DonationForm({
         </section>
 
         <div className="donation24-submit-wrap">
-          <button className="btn btn-accent btn-block donation24-confirm-btn" disabled={loading || finalAmount < 10000}>
-            {loading ? 'Menyimpan konfirmasi...' : 'Saya sudah membayar · Kirim konfirmasi →'}
+          <button
+            className="btn btn-accent btn-block donation24-confirm-btn"
+            disabled={loading || finalAmount < 10000 || (proofRequired && !proof)}
+          >
+            {loading ? 'Mengunggah & menyimpan...' : 'Kirim konfirmasi pembayaran →'}
           </button>
           <div className="form-security donation24-security">
-            🔒 Konfirmasi Anda masuk ke database YAHN dan akan diverifikasi oleh admin.
+            🔒 Bukti pembayaran tersimpan di Google Drive YAHN dan hanya digunakan untuk proses verifikasi.
           </div>
-          {status && !success && <div className="notice notice-warn">{status}</div>}
+          {status && <div className="notice notice-warn">{status}</div>}
         </div>
       </div>
 
@@ -241,23 +332,18 @@ export default function DonationForm({
           </div>
           <div className="donation24-summary-amount">{fmt(finalAmount)}</div>
           <div className="donation24-summary-list">
-            <div>
-              <span>Metode</span>
-              <strong>{method}</strong>
-            </div>
-            <div>
-              <span>Status</span>
-              <strong>Menunggu verifikasi</strong>
-            </div>
+            <div><span>Metode</span><strong>{method}</strong></div>
+            <div><span>Bukti</span><strong>{proof ? 'Siap diupload ✓' : proofRequired ? 'Belum dilampirkan' : 'Opsional'}</strong></div>
+            <div><span>Status</span><strong>Menunggu verifikasi</strong></div>
           </div>
           <div className="donation24-summary-note">
-            Setelah Anda mengirim konfirmasi, tim YAHN akan mencocokkan transaksi pada kanal pembayaran resmi.
+            Setelah konfirmasi dikirim, tim YAHN akan mencocokkan nominal dan bukti dengan transaksi pada kanal pembayaran resmi.
           </div>
         </div>
 
         <div className="donation24-help-card">
           <strong>Perlu bantuan?</strong>
-          <p>Anda dapat menghubungi tim YAHN melalui email untuk pertanyaan terkait dukungan pendidikan.</p>
+          <p>Hubungi tim YAHN apabila mengalami kendala pembayaran atau upload bukti.</p>
           <a href="mailto:yayasan.andihakim@gmail.com?subject=Pertanyaan%20Donasi%20YAHN">yayasan.andihakim@gmail.com</a>
         </div>
       </aside>

@@ -33,7 +33,7 @@ export default function SupporterHome() {
               <span className="eyebrow">Tiga Cara Berbagi</span>
               <h2>Pilih ritme yang terasa paling nyaman.</h2>
             </div>
-            <p>Klik salah satu pilihan untuk melihat langkah berikutnya tanpa meninggalkan halaman.</p>
+            <p>Pilih salah satu jalur. Anda akan langsung diarahkan ke langkah berikutnya yang paling relevan.</p>
           </div>
           <SupportJourney />
         </div>
