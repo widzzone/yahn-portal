@@ -3,12 +3,14 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Donation = { id:string; date:string; amount:number; method:string; status:string };
+type Donation = { id:string; date:string; amount:number; method:string; status:string; source?:string; period?:string };
+type MonthlyPayment = { id:string; date:string; amount:number; method:string; status:string; period:string; recurringId:string };
 type Sponsorship = { id:string; recipientId:string; recipientName:string; program:string; semester:string; supportType:string; amount:number; period:string; status:string };
 type DashboardData = {
   donor:{donorId:string;name:string;email:string;type:string;status:string};
   summary:{totalContribution:number;pendingContribution:number;monthsSupporting:number;studentsHelped:number;streak:number};
-  recurring:null|{amount:number;reminderDay:number;status:string;lastPayment:string};
+  recurring:null|{recurringId:string;amount:number;reminderDay:number;status:string;lastPayment:string};
+  monthlyPayments:MonthlyPayment[];
   sponsorships:Sponsorship[];
   donations:Donation[];
   impactUpdates:{title:string;body:string;date:string;recipientName?:string}[];
@@ -60,7 +62,7 @@ export default function DonorDashboardClient(){
       </div>
 
       {tab==='overview'&&<section className="donor25-grid-two donor27-grid-two">
-        <article className="donor25-panel donor27-panel"><div className="donor25-panel-head"><div><span>Komitmen</span><h2>Dukungan bulanan</h2></div><b className={data.recurring?'on':''}>{data.recurring?'Aktif':'Belum aktif'}</b></div>{data.recurring?<><div className="donor25-big-number">{rupiah(data.recurring.amount)} <small>/ bulan</small></div><div className="donor25-meta"><span>Pengingat tanggal <b>{data.recurring.reminderDay}</b></span><span>Terakhir: <b>{data.recurring.lastPayment||'Belum tercatat'}</b></span></div></>:<div className="donor25-empty"><p>Belum ada dukungan rutin.</p><Link href="/donasi/bulanan">Aktifkan dukungan bulanan →</Link></div>}</article>
+        <article className="donor25-panel donor27-panel"><div className="donor25-panel-head"><div><span>Komitmen</span><h2>Dukungan bulanan</h2></div><b className={data.recurring?'on':''}>{data.recurring?'Aktif':'Belum aktif'}</b></div>{data.recurring?<><div className="donor25-big-number">{rupiah(data.recurring.amount)} <small>/ bulan</small></div><div className="donor25-meta"><span>Pengingat tanggal <b>{data.recurring.reminderDay}</b></span><span>Terakhir: <b>{data.recurring.lastPayment||'Belum terverifikasi'}</b></span></div><Link className="btn btn-primary monthly13-dashboard-pay" href="/donasi/bulanan/bayar">Bayar bulan ini →</Link><div className="monthly13-history">{(data.monthlyPayments||[]).slice(0,4).map(p=><div key={p.id}><span>{p.period||'Periode'}</span><b>{p.status}</b></div>)}</div></>:<div className="donor25-empty"><p>Belum ada dukungan rutin.</p><Link href="/donasi/bulanan">Aktifkan dukungan bulanan →</Link></div>}</article>
         <article className="donor25-panel donor27-panel"><div className="donor25-panel-head"><div><span>Aktivitas terbaru</span><h2>Riwayat dukungan</h2></div><button onClick={()=>setTab('activity')}>Lihat semua</button></div>{data.donations.length?<div className="donor25-mini-list">{data.donations.slice(0,3).map(d=><div key={d.id}><div><b>{rupiah(d.amount)}</b><span>{d.method} · {new Date(d.date).toLocaleDateString('id-ID',{day:'numeric',month:'short'})}</span></div><small>{d.status}</small></div>)}</div>:<div className="donor25-empty"><p>Belum ada riwayat dukungan.</p></div>}</article>
       </section>}
 
