@@ -26,7 +26,7 @@ export function PortalFooter({ mode }: { mode: PortalMode }) {
             <Link href="/beasiswa/portal">Masuk / Daftar</Link>
             <Link href="/beasiswa/dashboard">Riwayat & Status</Link>
           </> : <>
-            <Link href="/donasi">Cara Berbagi</Link>
+            <Link href="/sahabat#cara-berbagi">Cara Berbagi</Link>
             <Link href="/donasi/bulanan">Dukungan Bulanan</Link>
             <Link href="/kakak-asuh">Kakak Asuh</Link>
           </>}

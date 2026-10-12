@@ -14,7 +14,7 @@ const studentLinks = [
 
 const supporterLinks = [
   { href: '/sahabat', label: 'Beranda' },
-  { href: '/donasi', label: 'Cara Berbagi' },
+  { href: '/sahabat#cara-berbagi', label: 'Cara Berbagi' },
   { href: '/donasi/bulanan', label: 'Dukungan Bulanan' },
   { href: '/kakak-asuh', label: 'Kakak Asuh' },
 ];
