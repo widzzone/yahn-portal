@@ -197,55 +197,73 @@ export function AboutCompactTabs() {
           )}
 
           {active === 'struktur' && (
-            <div className="about18-org-panel">
-              <article className="about18-org-card warm">
-                <header className="about18-org-header">
-                  <span className="about18-org-no">01</span>
-                  <div><small>Pengarah Yayasan</small><h3>Pembina</h3></div>
-                </header>
-                <div className="about18-leader"><span>Ketua</span><strong>Agus Buono</strong></div>
-                <div className="about18-member-section">
-                  <span>Anggota</span>
-                  <div className="about18-member-chips">
-                    <b>Amini Nasoetion</b><b>Asep Saefuddin</b><b>Lis Hendriani</b><b>Marlina Nasoetion</b>
-                  </div>
+            <div className="about19-governance">
+              <div className="about19-governance-summary">
+                <div className="about19-governance-copy">
+                  <span>Tata Kelola Yayasan</span>
+                  <h3>Struktur yang jelas, peran yang saling menguatkan.</h3>
+                  <p>Pembina memberi arah, Pengurus menjalankan organisasi, dan Pengawas menjaga tata kelola Yayasan tetap berjalan dengan baik.</p>
                 </div>
-              </article>
+                <div className="about19-governance-flow" aria-label="Alur tata kelola Yayasan">
+                  <div><b>01</b><strong>Pembina</strong><small>Arah & kebijakan</small></div>
+                  <i aria-hidden="true">→</i>
+                  <div className="active"><b>02</b><strong>Pengurus</strong><small>Pelaksana organisasi</small></div>
+                  <i aria-hidden="true">→</i>
+                  <div><b>03</b><strong>Pengawas</strong><small>Pengawasan</small></div>
+                </div>
+              </div>
 
-              <article className="about18-org-card primary">
-                <header className="about18-org-header">
-                  <span className="about18-org-no">02</span>
-                  <div><small>Pelaksana Organisasi</small><h3>Pengurus</h3></div>
-                </header>
-                <div className="about18-executive-grid">
-                  <div><span>Ketua</span><strong>Amir Toha</strong></div>
-                  <div><span>Wakil Ketua</span><strong>Sandi Noorzaman</strong></div>
-                  <div><span>Sekretaris</span><strong>Sutriyati</strong></div>
-                  <div><span>Bendahara</span><strong>Pimpi Rachmavirani</strong></div>
-                </div>
-                <div className="about18-member-section">
-                  <span>Anggota Pengurus</span>
-                  <div className="about18-member-chips">
-                    <b>Paras Sujiwo</b><b>Intan Juwita</b><b>Utami Dyah Safitri</b><b>Bagus Sartono</b><b>Nizwar H Nasoetion</b>
+              <div className="about19-org-grid">
+                <article className="about19-org-card warm">
+                  <header>
+                    <div className="about19-title"><span>01</span><div><small>Pengarah Yayasan</small><h4>Pembina</h4></div></div>
+                    <em>5 orang</em>
+                  </header>
+                  <div className="about19-chair"><span>Ketua</span><strong>Agus Buono</strong></div>
+                  <div className="about19-members">
+                    <small>Anggota</small>
+                    <div className="about19-name-grid">
+                      <b>Amini Nasoetion</b><b>Asep Saefuddin</b><b>Lis Hendriani</b><b>Marlina Nasoetion</b>
+                    </div>
                   </div>
-                </div>
-              </article>
+                </article>
 
-              <article className="about18-org-card soft">
-                <header className="about18-org-header">
-                  <span className="about18-org-no">03</span>
-                  <div><small>Fungsi Pengawasan</small><h3>Pengawas</h3></div>
-                </header>
-                <div className="about18-leader"><span>Ketua</span><strong>Etih Sudarnika</strong></div>
-                <div className="about18-member-section">
-                  <span>Anggota</span>
-                  <div className="about18-member-chips">
-                    <b>Satrio Wiseno</b><b>Wahyu Handayani</b><b>Parihutan Sinaga</b><b>Fitria Virgantari</b><b>Anang Kurnia</b><b>Andini Nauli Nasoetion</b>
+                <article className="about19-org-card primary">
+                  <header>
+                    <div className="about19-title"><span>02</span><div><small>Pelaksana Organisasi</small><h4>Pengurus</h4></div></div>
+                    <em>9 orang</em>
+                  </header>
+                  <div className="about19-executives">
+                    <div><span>Ketua</span><strong>Amir Toha</strong></div>
+                    <div><span>Wakil Ketua</span><strong>Sandi Noorzaman</strong></div>
+                    <div><span>Sekretaris</span><strong>Sutriyati</strong></div>
+                    <div><span>Bendahara</span><strong>Pimpi Rachmavirani</strong></div>
                   </div>
-                </div>
-              </article>
+                  <div className="about19-members">
+                    <small>Anggota Pengurus</small>
+                    <div className="about19-name-grid compact">
+                      <b>Paras Sujiwo</b><b>Intan Juwita</b><b>Utami Dyah Safitri</b><b>Bagus Sartono</b><b>Nizwar H Nasoetion</b>
+                    </div>
+                  </div>
+                </article>
+
+                <article className="about19-org-card soft">
+                  <header>
+                    <div className="about19-title"><span>03</span><div><small>Fungsi Pengawasan</small><h4>Pengawas</h4></div></div>
+                    <em>7 orang</em>
+                  </header>
+                  <div className="about19-chair"><span>Ketua</span><strong>Etih Sudarnika</strong></div>
+                  <div className="about19-members">
+                    <small>Anggota</small>
+                    <div className="about19-name-grid">
+                      <b>Satrio Wiseno</b><b>Wahyu Handayani</b><b>Parihutan Sinaga</b><b>Fitria Virgantari</b><b>Anang Kurnia</b><b>Andini Nauli Nasoetion</b>
+                    </div>
+                  </div>
+                </article>
+              </div>
             </div>
           )}
+
         </div>
       </div>
     </section>
