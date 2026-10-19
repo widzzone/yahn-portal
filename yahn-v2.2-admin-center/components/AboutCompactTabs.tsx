@@ -140,26 +140,58 @@ export function AboutCompactTabs() {
           )}
 
           {active === 'komunitas' && (
-            <div className="about16-community-panel refined">
-              <div className="about16-community-copy refined">
-                <span className="about16-panel-kicker">Sustainable Community</span>
+            <div className="about17-community-panel">
+              <div className="about17-community-copy">
+                <div className="about17-community-label">
+                  <span>Sustainable Community</span>
+                  <i aria-hidden="true" />
+                </div>
                 <h3>Satu nilai, tiga bagian komunitas yang saling menguatkan.</h3>
                 <p>
-                  Ekosistem YAHN mempertemukan penerima manfaat, alumni, dan para Sahabat YAHN agar
+                  Ekosistem YAHN mempertemukan alumni, penerima manfaat, dan para Sahabat YAHN agar
                   dukungan pendidikan tumbuh menjadi jejaring yang berkesinambungan.
                 </p>
-                <div className="about16-community-cards refined">
-                  <div><strong>Alumni</strong><span>Meneruskan nilai dan pengalaman.</span></div>
-                  <div><strong>Penerima Beasiswa</strong><span>Belajar, berkembang, dan bertumbuh.</span></div>
-                  <div><strong>Sahabat YAHN</strong><span>Menggerakkan keberlanjutan dukungan.</span></div>
+
+                <div className="about17-community-roles">
+                  <article>
+                    <div className="about17-role-icon alumni" aria-hidden="true">🎓</div>
+                    <strong>Alumni</strong>
+                    <span>Meneruskan nilai dan pengalaman.</span>
+                  </article>
+                  <article>
+                    <div className="about17-role-icon awardee" aria-hidden="true">🌱</div>
+                    <strong>Penerima Beasiswa</strong>
+                    <span>Belajar, berkembang, dan bertumbuh.</span>
+                  </article>
+                  <article>
+                    <div className="about17-role-icon supporter" aria-hidden="true">●●●</div>
+                    <strong>Sahabat YAHN</strong>
+                    <span>Menggerakkan keberlanjutan dukungan.</span>
+                  </article>
                 </div>
               </div>
-              <div className="about16-community-visual refined" aria-label="Ekosistem YAHN">
-                <div className="about16-ring" />
-                <div className="about16-core"><img src="/logo-yahn.png" alt="Logo YAHN" /><strong>Nilai AHN</strong></div>
-                <div className="about16-node about16-node-top">Alumni</div>
-                <div className="about16-node about16-node-left">Penerima<br />Beasiswa</div>
-                <div className="about16-node about16-node-right">Sahabat<br />YAHN</div>
+
+              <div className="about17-community-visual" aria-label="Diagram Sustainable Community YAHN">
+                <div className="about17-watermark" aria-hidden="true" />
+                <div className="about17-ring" aria-hidden="true" />
+                <div className="about17-core">
+                  <div className="about17-logo-mark" aria-hidden="true" />
+                  <small>Yayasan</small>
+                  <strong>Nilai AHN</strong>
+                </div>
+
+                <div className="about17-node about17-node-top">
+                  <span>Alumni</span>
+                  <i aria-hidden="true" />
+                </div>
+                <div className="about17-node about17-node-left">
+                  <span>Penerima<br />Beasiswa</span>
+                  <i aria-hidden="true" />
+                </div>
+                <div className="about17-node about17-node-right">
+                  <span>Sahabat<br />YAHN</span>
+                  <i aria-hidden="true" />
+                </div>
               </div>
             </div>
           )}
