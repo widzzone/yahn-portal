@@ -1,5 +1,5 @@
-import { PortalChooser } from '@/components/PortalChooser';
+import { FoundationLanding } from '@/components/FoundationLanding';
 
 export default function Home() {
-  return <PortalChooser />;
+  return <FoundationLanding />;
 }
