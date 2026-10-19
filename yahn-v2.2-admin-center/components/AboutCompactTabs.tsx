@@ -197,32 +197,52 @@ export function AboutCompactTabs() {
           )}
 
           {active === 'struktur' && (
-            <div className="about16-org-panel refined">
-              <article className="about16-org-card warm">
-                <div className="about16-org-title"><span>01</span><h3>Pembina</h3></div>
-                <dl>
-                  <div><dt>Ketua</dt><dd>Agus Buono</dd></div>
-                  <div><dt>Anggota</dt><dd>Amini Nasoetion<br />Asep Saefuddin<br />Lis Hendriani<br />Marlina Nasoetion</dd></div>
-                </dl>
+            <div className="about18-org-panel">
+              <article className="about18-org-card warm">
+                <header className="about18-org-header">
+                  <span className="about18-org-no">01</span>
+                  <div><small>Pengarah Yayasan</small><h3>Pembina</h3></div>
+                </header>
+                <div className="about18-leader"><span>Ketua</span><strong>Agus Buono</strong></div>
+                <div className="about18-member-section">
+                  <span>Anggota</span>
+                  <div className="about18-member-chips">
+                    <b>Amini Nasoetion</b><b>Asep Saefuddin</b><b>Lis Hendriani</b><b>Marlina Nasoetion</b>
+                  </div>
+                </div>
               </article>
 
-              <article className="about16-org-card brand">
-                <div className="about16-org-title"><span>02</span><h3>Pengurus</h3></div>
-                <dl>
-                  <div><dt>Ketua</dt><dd>Amir Toha</dd></div>
-                  <div><dt>Wakil Ketua</dt><dd>Sandi Noorzaman</dd></div>
-                  <div><dt>Sekretaris</dt><dd>Sutriyati</dd></div>
-                  <div><dt>Bendahara</dt><dd>Pimpi Rachmavirani</dd></div>
-                  <div><dt>Anggota</dt><dd>Paras Sujiwo · Intan Juwita · Utami Dyah Safitri · Bagus Sartono · Nizwar H Nasoetion</dd></div>
-                </dl>
+              <article className="about18-org-card primary">
+                <header className="about18-org-header">
+                  <span className="about18-org-no">02</span>
+                  <div><small>Pelaksana Organisasi</small><h3>Pengurus</h3></div>
+                </header>
+                <div className="about18-executive-grid">
+                  <div><span>Ketua</span><strong>Amir Toha</strong></div>
+                  <div><span>Wakil Ketua</span><strong>Sandi Noorzaman</strong></div>
+                  <div><span>Sekretaris</span><strong>Sutriyati</strong></div>
+                  <div><span>Bendahara</span><strong>Pimpi Rachmavirani</strong></div>
+                </div>
+                <div className="about18-member-section">
+                  <span>Anggota Pengurus</span>
+                  <div className="about18-member-chips">
+                    <b>Paras Sujiwo</b><b>Intan Juwita</b><b>Utami Dyah Safitri</b><b>Bagus Sartono</b><b>Nizwar H Nasoetion</b>
+                  </div>
+                </div>
               </article>
 
-              <article className="about16-org-card soft">
-                <div className="about16-org-title"><span>03</span><h3>Pengawas</h3></div>
-                <dl>
-                  <div><dt>Ketua</dt><dd>Etih Sudarnika</dd></div>
-                  <div><dt>Anggota</dt><dd>Satrio Wiseno<br />Wahyu Handayani<br />Parihutan Sinaga<br />Fitria Virgantari<br />Anang Kurnia<br />Andini Nauli Nasoetion</dd></div>
-                </dl>
+              <article className="about18-org-card soft">
+                <header className="about18-org-header">
+                  <span className="about18-org-no">03</span>
+                  <div><small>Fungsi Pengawasan</small><h3>Pengawas</h3></div>
+                </header>
+                <div className="about18-leader"><span>Ketua</span><strong>Etih Sudarnika</strong></div>
+                <div className="about18-member-section">
+                  <span>Anggota</span>
+                  <div className="about18-member-chips">
+                    <b>Satrio Wiseno</b><b>Wahyu Handayani</b><b>Parihutan Sinaga</b><b>Fitria Virgantari</b><b>Anang Kurnia</b><b>Andini Nauli Nasoetion</b>
+                  </div>
+                </div>
               </article>
             </div>
           )}
