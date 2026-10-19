@@ -34,11 +34,35 @@ const values = [
   },
 ];
 
+const launchCoverage = [
+  {
+    source: 'IPB University',
+    title: 'Yayasan Andi Hakim Nasoetion Diresmikan, Perluas Akses Pendidikan dan Wariskan Nilai Keilmuan',
+    image: '/launch-yahn/ipb.jpg',
+  },
+  {
+    source: 'PanganNews',
+    title: 'Pendidikan Untuk Semua Dari Yayasan Andi Hakim Nasoetion',
+    image: '/launch-yahn/pangannews.jpg',
+  },
+  {
+    source: 'RadarSuara',
+    title: 'Pendidikan untuk Semua dari Yayasan Andi Hakim Nasoetion',
+    image: '/launch-yahn/radarsuara.jpg',
+  },
+  {
+    source: 'ANTARA',
+    title: 'Yayasan Andi Hakim Nasoetion akan membawa berkah untuk semua',
+    image: '/launch-yahn/antara.jpg',
+  },
+];
+
 const tabs = [
   { id: 'tujuan', label: 'Tujuan & Kegiatan', no: '01' },
   { id: 'nilai', label: 'Nilai AHN', no: '02' },
   { id: 'komunitas', label: 'Sustainable Community', no: '03' },
   { id: 'struktur', label: 'Struktur Organisasi', no: '04' },
+  { id: 'peluncuran', label: 'Peluncuran Yayasan', no: '05' },
 ] as const;
 
 type TabId = (typeof tabs)[number]['id'];
@@ -58,7 +82,8 @@ export function AboutCompactTabs() {
             <span>Tujuan</span><i />
             <span>Nilai</span><i />
             <span>Komunitas</span><i />
-            <span>Tata Kelola</span>
+            <span>Tata Kelola</span><i />
+            <span>Peluncuran</span>
           </div>
         </div>
 
@@ -260,6 +285,56 @@ export function AboutCompactTabs() {
                     </div>
                   </div>
                 </article>
+              </div>
+            </div>
+          )}
+
+          {active === 'peluncuran' && (
+            <div className="about20-launch">
+              <div className="about20-event-card">
+                <div className="about20-event-photo">
+                  <img src="/launch-yahn/peluncuran-main.jpg" alt="Peluncuran Yayasan Andi Hakim Nasoetion di IPB University" />
+                  <div className="about20-date-badge">
+                    <strong>21</strong>
+                    <span>Desember<br />2025</span>
+                  </div>
+                  <div className="about20-photo-label">Peluncuran Yayasan Andi Hakim Nasoetion</div>
+                </div>
+                <div className="about20-event-meta">
+                  <div><small>Lokasi</small><strong>Auditorium Andi Hakim Nasoetion</strong></div>
+                  <div><small>Kampus</small><strong>IPB University, Darmaga</strong></div>
+                </div>
+              </div>
+
+              <div className="about20-launch-copy">
+                <span className="about20-kicker">Peluncuran Yayasan</span>
+                <h3>Awal perjalanan YAHN untuk memperluas akses pendidikan.</h3>
+                <p>
+                  Yayasan Andi Hakim Nasoetion diluncurkan pada 21 Desember 2025 di Auditorium Andi Hakim Nasoetion, Kampus IPB University, Darmaga. Momen ini menjadi penanda dimulainya perjalanan Yayasan dalam memperluas akses pendidikan, menumbuhkan talenta, dan meneruskan nilai-nilai Prof. Dr. Ir. Andi Hakim Nasoetion.
+                </p>
+
+                <div className="about20-launch-highlights">
+                  <div><b>21 Des 2025</b><span>Tanggal Peluncuran</span></div>
+                  <div><b>IPB University</b><span>Lokasi Peluncuran</span></div>
+                  <div><b>4 Liputan</b><span>Dokumentasi Media</span></div>
+                </div>
+
+                <div className="about20-coverage-head">
+                  <div><small>Liputan Peluncuran</small><strong>Publikasi yang mendokumentasikan momen peresmian.</strong></div>
+                  <span>Media Coverage</span>
+                </div>
+                <div className="about20-coverage-grid">
+                  {launchCoverage.map((item) => (
+                    <a key={item.source} href={item.image} target="_blank" rel="noreferrer" className="about20-coverage-card">
+                      <img src={item.image} alt={`Liputan ${item.source} tentang peluncuran YAHN`} />
+                      <div>
+                        <small>{item.source}</small>
+                        <strong>{item.title}</strong>
+                        <span>Lihat dokumentasi →</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           )}
