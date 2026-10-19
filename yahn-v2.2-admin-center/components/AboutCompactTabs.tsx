@@ -35,10 +35,10 @@ const values = [
 ];
 
 const tabs = [
-  { id: 'tujuan', label: 'Tujuan & Kegiatan' },
-  { id: 'nilai', label: 'Nilai AHN' },
-  { id: 'komunitas', label: 'Sustainable Community' },
-  { id: 'struktur', label: 'Struktur Organisasi' },
+  { id: 'tujuan', label: 'Tujuan & Kegiatan', no: '01' },
+  { id: 'nilai', label: 'Nilai AHN', no: '02' },
+  { id: 'komunitas', label: 'Sustainable Community', no: '03' },
+  { id: 'struktur', label: 'Struktur Organisasi', no: '04' },
 ] as const;
 
 type TabId = (typeof tabs)[number]['id'];
@@ -49,18 +49,20 @@ export function AboutCompactTabs() {
   return (
     <section className="about16-profile-section" id="profil-yahn">
       <div className="container">
-        <div className="about16-profile-head">
+        <div className="about16-profile-head refined">
           <div>
-            <span className="about16-eyebrow">Mengenal YAHN</span>
-            <h2>Satu profil, seluruh informasi utama.</h2>
+            <span className="about16-eyebrow">Profil Yayasan</span>
+            <h2>Kenali YAHN dalam satu tampilan.</h2>
           </div>
-          <p>
-            Pilih bagian yang ingin Anda lihat. Informasi lengkap tetap tersedia tanpa membuat
-            halaman menjadi terlalu panjang.
-          </p>
+          <div className="about16-profile-note">
+            <span>Tujuan</span><i />
+            <span>Nilai</span><i />
+            <span>Komunitas</span><i />
+            <span>Tata Kelola</span>
+          </div>
         </div>
 
-        <div className="about16-tabs" role="tablist" aria-label="Informasi Yayasan">
+        <div className="about16-tabs refined" role="tablist" aria-label="Informasi Yayasan">
           {tabs.map((tab) => (
             <button
               key={tab.id}
@@ -70,46 +72,61 @@ export function AboutCompactTabs() {
               className={active === tab.id ? 'active' : ''}
               onClick={() => setActive(tab.id)}
             >
-              {tab.label}
+              <small>{tab.no}</small>
+              <span>{tab.label}</span>
             </button>
           ))}
         </div>
 
-        <div className="about16-panel" role="tabpanel">
+        <div className="about16-panel refined" role="tabpanel">
           {active === 'tujuan' && (
-            <div className="about16-purpose-panel">
-              <div className="about16-purpose-main">
-                <span className="about16-panel-kicker">Tujuan Yayasan</span>
+            <div className="about16-purpose-panel refined">
+              <div className="about16-purpose-main refined">
+                <div className="about16-purpose-topline">
+                  <span className="about16-panel-kicker">Tujuan Yayasan</span>
+                  <small>Fokus Utama</small>
+                </div>
                 <h3>Membangun manusia berbudaya dan bermartabat melalui akses pendidikan.</h3>
                 <p>
-                  Tujuan Yayasan Andi Hakim Nasoetion adalah untuk berkontribusi membangun manusia
-                  berbudaya dan bermartabat melalui pembukaan peluang akses ke pendidikan tinggi
-                  dengan melaksanakan kegiatan sosial kemanusiaan, termasuk penghimpunan dan
-                  penyaluran donasi kepada mahasiswa yang membutuhkan.
+                  Yayasan Andi Hakim Nasoetion berkontribusi membuka peluang akses ke pendidikan
+                  tinggi melalui kegiatan sosial kemanusiaan, termasuk penghimpunan dan penyaluran
+                  donasi kepada mahasiswa yang membutuhkan.
                 </p>
+                <div className="about16-purpose-tags">
+                  <span>Akses Pendidikan</span>
+                  <span>Talenta</span>
+                  <span>Kepedulian</span>
+                </div>
               </div>
-              <div className="about16-activity-list">
-                {activities.map((item, index) => (
-                  <article key={item}>
-                    <span>{String(index + 1).padStart(2, '0')}</span>
-                    <p>{item}</p>
-                  </article>
-                ))}
+
+              <div className="about16-activity-wrap">
+                <div className="about16-activity-heading">
+                  <div><strong>5 kegiatan utama</strong><span>Pelaksanaan tujuan Yayasan</span></div>
+                  <b>01—05</b>
+                </div>
+                <div className="about16-activity-list refined">
+                  {activities.map((item, index) => (
+                    <article key={item} className={index === 0 ? 'featured' : ''}>
+                      <span>{String(index + 1).padStart(2, '0')}</span>
+                      <p>{item}</p>
+                    </article>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
           {active === 'nilai' && (
-            <div className="about16-values-panel">
-              <div className="about16-panel-intro">
+            <div className="about16-values-panel refined">
+              <div className="about16-panel-intro refined">
                 <span className="about16-panel-kicker">YAHN Values</span>
-                <h3>Nilai yang menjaga arah setiap program.</h3>
+                <h3>Tiga nilai yang menjaga arah setiap program.</h3>
                 <p>
                   Nilai AHN menghubungkan pengembangan talenta, pemerataan akses pendidikan, dan
                   keberlanjutan dukungan.
                 </p>
               </div>
-              <div className="about16-value-grid">
+              <div className="about16-value-grid refined">
                 {values.map((value) => (
                   <article key={value.title}>
                     <div className="about16-value-meta"><span>{value.icon}</span><small>{value.no}</small></div>
@@ -123,21 +140,21 @@ export function AboutCompactTabs() {
           )}
 
           {active === 'komunitas' && (
-            <div className="about16-community-panel">
-              <div className="about16-community-copy">
+            <div className="about16-community-panel refined">
+              <div className="about16-community-copy refined">
                 <span className="about16-panel-kicker">Sustainable Community</span>
                 <h3>Satu nilai, tiga bagian komunitas yang saling menguatkan.</h3>
                 <p>
                   Ekosistem YAHN mempertemukan penerima manfaat, alumni, dan para Sahabat YAHN agar
                   dukungan pendidikan tumbuh menjadi jejaring yang berkesinambungan.
                 </p>
-                <div className="about16-community-cards">
+                <div className="about16-community-cards refined">
                   <div><strong>Alumni</strong><span>Meneruskan nilai dan pengalaman.</span></div>
                   <div><strong>Penerima Beasiswa</strong><span>Belajar, berkembang, dan bertumbuh.</span></div>
                   <div><strong>Sahabat YAHN</strong><span>Menggerakkan keberlanjutan dukungan.</span></div>
                 </div>
               </div>
-              <div className="about16-community-visual" aria-label="Ekosistem YAHN">
+              <div className="about16-community-visual refined" aria-label="Ekosistem YAHN">
                 <div className="about16-ring" />
                 <div className="about16-core"><img src="/logo-yahn.png" alt="Logo YAHN" /><strong>Nilai AHN</strong></div>
                 <div className="about16-node about16-node-top">Alumni</div>
@@ -148,7 +165,7 @@ export function AboutCompactTabs() {
           )}
 
           {active === 'struktur' && (
-            <div className="about16-org-panel">
+            <div className="about16-org-panel refined">
               <article className="about16-org-card warm">
                 <div className="about16-org-title"><span>01</span><h3>Pembina</h3></div>
                 <dl>

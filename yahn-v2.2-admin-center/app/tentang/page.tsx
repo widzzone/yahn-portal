@@ -30,10 +30,15 @@ export default function TentangYayasanPage() {
               </div>
             </div>
 
-            <div className="about16-hero-visual">
+            <div className="about16-hero-visual refined">
               <div className="about16-logo-halo" />
-              <img src="/logo-yahn.png" alt="Logo Yayasan Andi Hakim Nasoetion" />
-              <div className="about16-hero-note"><span>Dedikasi</span><strong>untuk Pendidikan Masa Depan</strong></div>
+              <div className="about16-logo-card">
+                <img src="/logo-yahn.png" alt="Logo Yayasan Andi Hakim Nasoetion" />
+                <div className="about16-logo-caption">
+                  <span>Yayasan Andi Hakim Nasoetion</span>
+                  <strong>Dedikasi untuk Pendidikan Masa Depan</strong>
+                </div>
+              </div>
             </div>
           </div>
         </section>
