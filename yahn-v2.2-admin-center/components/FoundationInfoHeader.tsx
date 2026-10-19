@@ -7,8 +7,8 @@ const links = [
   { href: '/', label: 'Beranda' },
   { href: '/tentang', label: 'Tentang Yayasan' },
   { href: '/mahasiswa', label: 'Beasiswa' },
-  { href: '/sahabat', label: 'Menjadi Donatur' },
-  { href: '/dampak', label: 'Laporan' },
+  { href: '/sahabat', label: 'Menjadi Sahabat' },
+  { href: '/dampak', label: 'Dampak & Laporan' },
 ];
 
 export function FoundationInfoHeader() {

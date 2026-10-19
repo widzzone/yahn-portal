@@ -14,8 +14,8 @@ export function FoundationInfoFooter() {
 
         <div className="foundation15-footer-links">
           <Link href="/mahasiswa">Mendaftar Beasiswa</Link>
-          <Link href="/sahabat">Menjadi Donatur</Link>
-          <Link href="/dampak">Laporan</Link>
+          <Link href="/sahabat">Menjadi Sahabat</Link>
+          <Link href="/dampak">Dampak & Laporan</Link>
         </div>
 
         <div className="foundation15-footer-contact">

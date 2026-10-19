@@ -37,25 +37,28 @@ const values = [
 const launchCoverage = [
   {
     source: 'IPB University',
+    date: '22 Des 2025',
     title: 'Yayasan Andi Hakim Nasoetion Diresmikan, Perluas Akses Pendidikan dan Wariskan Nilai Keilmuan',
-    image: '/launch-yahn/ipb.jpg',
+    url: 'https://www.ipb.ac.id/news/index/2025/12/yayasan-andi-hakim-nasoetion-diresmikan-perluas-akses-pendidikan-dan-wariskan-nilai-keilmuan/',
+    tone: 'ipb',
   },
   {
-    source: 'PanganNews',
-    title: 'Pendidikan Untuk Semua Dari Yayasan Andi Hakim Nasoetion',
-    image: '/launch-yahn/pangannews.jpg',
-  },
-  {
-    source: 'RadarSuara',
+    source: 'Agronews',
+    date: '23 Des 2025',
     title: 'Pendidikan untuk Semua dari Yayasan Andi Hakim Nasoetion',
-    image: '/launch-yahn/radarsuara.jpg',
+    url: 'https://www.agronews.id/berita/1766967167/pendidikan-untuk-semua-dari-yayasan-andi-hakim-nasoetion',
+    tone: 'agro',
   },
   {
-    source: 'ANTARA',
-    title: 'Yayasan Andi Hakim Nasoetion akan membawa berkah untuk semua',
-    image: '/launch-yahn/antara.jpg',
+    source: 'Radar Suara',
+    date: '23 Des 2025',
+    title: 'Pendidikan untuk Semua dari Yayasan Andi Hakim Nasoetion',
+    url: 'https://www.radarsuara.com/berita/1766480397/pendidikan-untuk-semua-dari-yayasan-andi-hakim-nasoetion',
+    tone: 'radar',
   },
 ];
+
+const launchHeroImage = 'https://www.ipb.ac.id/wp-content/uploads/2025/12/yayasan-andi-hakim-nasoetion-diresmikan-perluas-akses-pendidikan-dan-wariskan-nilai-keilmuan-770x400.jpg';
 
 const tabs = [
   { id: 'tujuan', label: 'Tujuan & Kegiatan', no: '01' },
@@ -290,48 +293,66 @@ export function AboutCompactTabs() {
           )}
 
           {active === 'peluncuran' && (
-            <div className="about20-launch">
-              <div className="about20-event-card">
-                <div className="about20-event-photo">
-                  <img src="/launch-yahn/peluncuran-main.jpg" alt="Peluncuran Yayasan Andi Hakim Nasoetion di IPB University" />
-                  <div className="about20-date-badge">
+            <div className="about21-launch">
+              <div className="about21-launch-hero">
+                <div className="about21-launch-photo">
+                  <img
+                    src={launchHeroImage}
+                    alt="Peresmian Yayasan Andi Hakim Nasoetion di IPB University"
+                    onError={(event) => {
+                      event.currentTarget.src = '/launch-yahn/peluncuran-main.jpg';
+                    }}
+                  />
+                  <div className="about21-launch-date">
                     <strong>21</strong>
                     <span>Desember<br />2025</span>
                   </div>
-                  <div className="about20-photo-label">Peluncuran Yayasan Andi Hakim Nasoetion</div>
+                  <div className="about21-launch-caption">
+                    <span>Peluncuran Yayasan</span>
+                    <strong>Auditorium Andi Hakim Nasoetion · IPB University</strong>
+                  </div>
                 </div>
-                <div className="about20-event-meta">
-                  <div><small>Lokasi</small><strong>Auditorium Andi Hakim Nasoetion</strong></div>
-                  <div><small>Kampus</small><strong>IPB University, Darmaga</strong></div>
+
+                <div className="about21-launch-story">
+                  <span className="about21-kicker">Jejak Perjalanan</span>
+                  <h3>Dari kepedulian menjadi gerakan yang terlembaga.</h3>
+                  <p>
+                    Peluncuran Yayasan Andi Hakim Nasoetion pada 21 Desember 2025 menjadi langkah
+                    baru untuk memperluas akses pendidikan, menumbuhkan talenta, dan meneruskan
+                    nilai-nilai Prof. Dr. Ir. Andi Hakim Nasoetion melalui tata kelola yang lebih
+                    profesional dan berkelanjutan.
+                  </p>
+                  <div className="about21-history-strip" aria-label="Jejak perjalanan YAHN">
+                    <article><b>2002</b><span>Awal perjalanan Beasiswa AHN</span></article>
+                    <article><b>21 Des 2025</b><span>Peresmian Yayasan</span></article>
+                    <article><b>&gt; Rp500 Juta</b><span>Dukungan pendidikan telah disalurkan</span></article>
+                  </div>
                 </div>
               </div>
 
-              <div className="about20-launch-copy">
-                <span className="about20-kicker">Peluncuran Yayasan</span>
-                <h3>Awal perjalanan YAHN untuk memperluas akses pendidikan.</h3>
-                <p>
-                  Yayasan Andi Hakim Nasoetion diluncurkan pada 21 Desember 2025 di Auditorium Andi Hakim Nasoetion, Kampus IPB University, Darmaga. Momen ini menjadi penanda dimulainya perjalanan Yayasan dalam memperluas akses pendidikan, menumbuhkan talenta, dan meneruskan nilai-nilai Prof. Dr. Ir. Andi Hakim Nasoetion.
-                </p>
-
-                <div className="about20-launch-highlights">
-                  <div><b>21 Des 2025</b><span>Tanggal Peluncuran</span></div>
-                  <div><b>IPB University</b><span>Lokasi Peluncuran</span></div>
-                  <div><b>4 Liputan</b><span>Dokumentasi Media</span></div>
+              <div className="about21-press-wall">
+                <div className="about21-press-heading">
+                  <div>
+                    <span>Liputan Peluncuran</span>
+                    <h4>YAHN dalam pemberitaan.</h4>
+                  </div>
+                  <p>Telusuri dokumentasi peluncuran melalui sumber berita asli.</p>
                 </div>
-
-                <div className="about20-coverage-head">
-                  <div><small>Liputan Peluncuran</small><strong>Publikasi yang mendokumentasikan momen peresmian.</strong></div>
-                  <span>Media Coverage</span>
-                </div>
-                <div className="about20-coverage-grid">
+                <div className="about21-press-grid">
                   {launchCoverage.map((item) => (
-                    <a key={item.source} href={item.image} target="_blank" rel="noreferrer" className="about20-coverage-card">
-                      <img src={item.image} alt={`Liputan ${item.source} tentang peluncuran YAHN`} />
-                      <div>
-                        <small>{item.source}</small>
-                        <strong>{item.title}</strong>
-                        <span>Lihat dokumentasi →</span>
+                    <a
+                      key={item.source}
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={`about21-press-card ${item.tone}`}
+                    >
+                      <div className="about21-source-row">
+                        <span className="about21-source-mark">{item.source.slice(0, 2).toUpperCase()}</span>
+                        <div><strong>{item.source}</strong><small>{item.date}</small></div>
                       </div>
+                      <h5>{item.title}</h5>
+                      <span className="about21-read">Baca berita <b>↗</b></span>
                     </a>
                   ))}
                 </div>

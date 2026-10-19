@@ -45,18 +45,37 @@ export default function TentangYayasanPage() {
 
         <AboutCompactTabs />
 
-        <section className="about16-cta-section">
+        <section className="about21-connect-section">
           <div className="container">
-            <div className="about16-cta">
+            <div className="about21-connect-head">
               <div>
-                <span className="about16-eyebrow light">Bersama YAHN</span>
-                <h2>Ambil bagian dalam membuka peluang pendidikan.</h2>
-                <p>Daftar sebagai calon penerima manfaat atau bergabung sebagai Sahabat YAHN.</p>
+                <span className="about16-eyebrow">Terhubung dengan YAHN</span>
+                <h2>Setiap orang dapat mengambil peran.</h2>
               </div>
-              <div className="about16-cta-actions">
-                <Link href="/mahasiswa" className="btn btn-white btn-lg">Mendaftar Beasiswa →</Link>
-                <Link href="/sahabat" className="btn btn-accent btn-lg">Menjadi Donatur →</Link>
-              </div>
+              <p>Kenali program, ikut mendukung keberlanjutan pendidikan, dan lihat dampak yang tercatat secara transparan.</p>
+            </div>
+            <div className="about21-connect-grid">
+              <Link href="/mahasiswa" className="about21-connect-card student">
+                <span className="about21-connect-icon" aria-hidden="true">🎓</span>
+                <small>Untuk calon penerima</small>
+                <h3>Program Beasiswa</h3>
+                <p>Kenali program, persyaratan, dan perjalanan seleksi Beasiswa YAHN.</p>
+                <b>Lihat program <i>→</i></b>
+              </Link>
+              <Link href="/sahabat" className="about21-connect-card supporter">
+                <span className="about21-connect-icon" aria-hidden="true">♡</span>
+                <small>Untuk sahabat pendidikan</small>
+                <h3>Menjadi Sahabat YAHN</h3>
+                <p>Pilih cara berbagi yang sesuai dan ikut menjaga keberlanjutan pendidikan.</p>
+                <b>Mulai berbagi <i>→</i></b>
+              </Link>
+              <Link href="/dampak" className="about21-connect-card report">
+                <span className="about21-connect-icon" aria-hidden="true">▤</span>
+                <small>Untuk publik</small>
+                <h3>Dampak & Laporan</h3>
+                <p>Ikuti penyaluran, perkembangan program, dan transparansi YAHN.</p>
+                <b>Lihat laporan <i>→</i></b>
+              </Link>
             </div>
           </div>
         </section>
